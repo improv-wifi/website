@@ -1,0 +1,14 @@
+# Stop on errors
+set -e
+
+cd "$(dirname "$0")/.."
+
+rm -rf dist
+cp -r public dist
+
+# Quit all background tasks when script exits
+trap "kill 0" EXIT
+
+yarn serve dist &
+yarn eleventy --watch &
+wait
