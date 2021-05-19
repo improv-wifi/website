@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>
-      Improv: open standard for WiFi provisioning via Bluetooth Low Energy
+      Improv: open standard for Wi-Fi provisioning via Bluetooth Low Energy
     </title>
     <style>
       body {
@@ -50,6 +50,9 @@
       .project .info h3 {
         margin: 4px 0 8px;
       }
+      .project + .project {
+        margin-top: 1rem;
+      }
       .videoWrapper {
         position: relative;
         padding-bottom: 56.25%; /* 16:9 */
@@ -79,12 +82,22 @@
   <body>
     <div class="content">
       <h1>Improv</h1>
-      <h2>Open standard for WiFi provisioning via Bluetooth LE</h2>
+      <h2>Open standard for Wi-Fi provisioning via Bluetooth LE</h2>
       <p>
-        Improv offers an open standard and ready-made SDKs to create the best
-        possible user experience for users to configure the WiFi on their
-        devices.
+        Improv is a free and open standard with ready-made SDKs to offer a great
+        user experience for users to configure Wi-Fi on their devices.
       </p>
+      <p>
+        With Improv creators can offer a better onboarding experience when they
+        share their creations with others:
+      </p>
+      <ol>
+        <li>Plug gadget in</li>
+        <li>Use Improv to sent the Wi-Fi credentials to the gadget</li>
+        <li>
+          App detects the gadget on the network and offers user to onboard it
+        </li>
+      </ol>
 
       <ul class="menu">
         <li><a href="#">Documentation</a></li>
@@ -114,11 +127,11 @@
         </div>
         <div class="info">
           <h3>ESPHome</h3>
-          <p><a href="https://www.esphome.io" target="_blank">Website</a></p>
           <p>
             Open source firmware for ESP8266/ESP32 devices that is easy to use.
           </p>
-          <p>Allows configuring WiFi credentials via Improv.</p>
+          <p>Allows configuring Wi-Fi credentials via Improv.</p>
+          <p><a href="https://www.esphome.io" target="_blank">Website</a></p>
         </div>
       </div>
       <div class="project">
@@ -128,9 +141,6 @@
         <div class="info">
           <h3>Home Assistant</h3>
           <p>
-            <a href="https://www.home-assistant.io" target="_blank">Website</a>
-          </p>
-          <p>
             Open source home automation with a focus on local control and
             privacy.
           </p>
@@ -138,50 +148,43 @@
             Allows it's mobile applications for Android and iOS to provision
             devices with Improv.
           </p>
+          <p>
+            <a href="https://www.home-assistant.io" target="_blank">Website</a>
+          </p>
         </div>
       </div>
 
       <h3>The problem we're solving</h3>
+
       <p>
-        A lot of devices require an internet connection to be controlled or
-        receive data, both locally and in the cloud. The majority of the devices
-        use WiFi to establish a connection.
+        Getting your Wi-Fi gadget connected to the internet is a bad user
+        experience.
       </p>
 
       <p>
-        Configuring a device to connect to your WiFi is a pain. The most common
-        approach is Soft Enabled Access Point. The device starts its own WiFi
+        A lot of devices require an internet connection to be controlled or
+        receive data, both locally and in the cloud. The majority of the devices
+        use Wi-Fi to establish a connection.
+      </p>
+
+      <p>
+        Configuring a device to connect to your Wi-Fi is a pain. The most common
+        approach is Soft Enabled Access Point. The device starts its own Wi-Fi
         access point, the user connects to it with their phone/computer and then
         interacts directly with the device via an app or a website served from
         the device.
       </p>
 
       <p>
-        It’s easy for something to go wrong. The user submits incorrect WiFi
+        It’s easy for something to go wrong. The user submits incorrect Wi-Fi
         credentials or the phone loses access to the access point. In such cases
         it is difficult to recover. Phones also have a bad time dealing with
         access points that don’t provide internet access.
       </p>
 
-      <p>
-        Getting your wifi gadget connected to the internet is a bad user
-        experience.
-      </p>
-
-      <p>
-        But we don’t only want creators to be able to better help set up their
-        own gadgets. We also want to make it more appealing to share and sell
-        such gadgets. Microcontrollers with WiFi are very cheap and we’re seeing
-        a lot of custom firmwares being created like ESPHome, WLED, Tasmota.
-        More and more people are experimenting with- and selling creations based
-        on these. By standardizing provisioning WiFi credentials and making this
-        flow easily available, creators can offer a greater user experience and
-        the technology will be more accessible.
-      </p>
-
       <h3>Scope and constraints</h3>
       <p>
-        The goal of the standard is to get the device connected to the WiFi via
+        The goal of the standard is to get the device connected to the Wi-Fi via
         Bluetooth Low Energy (BLE). It is not the goal to offer a way for
         devices to share data or control. The standard should work without
         requiring the device to contain a screen.
