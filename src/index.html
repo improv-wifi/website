@@ -99,11 +99,12 @@
           App detects the gadget on the network and offers user to onboard it
         </li>
       </ol>
-      <p class="try-out">
-        Improv provisioning also works in browsers that support WebBluetooth
-        <improv-wifi-launch-button>
-          <button>Try it out</button>
-        </improv-wifi-launch-button>
+      <p>
+        Improv provisioning also works in browsers that support
+        WebBluetooth<span class="not-supported"
+          >. Your browser is not supported, try with Google Chrome or Microsoft
+          Edge<span class="not-supported-i"></span>.</span
+        >
       </p>
 
       <ul class="menu">
@@ -213,15 +214,20 @@
     </div>
     <script
       type="module"
-      src="https://unpkg.com/improv-wifi-sdk/dist/web/launch-button.js?module"
+      src="https://unpkg.com/improv-wifi-sdk@0.0.2/dist/web/launch-button.js?module"
     ></script>
     <script>
-      var klass =
-        customElements && customElements.get("improv-wifi-launch-button");
-      var supported = klass && klass.isSupported;
-      if (!supported) {
-        document.querySelector("improv-wifi-launch-button").outerHTML =
-          "(your browser does not, try with Chrome or Edge).";
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        document.querySelector(".not-supported-i").innerHTML =
+          " (but not on your iOS device)";
+      }
+      if (customElements) {
+        customElements.whenDefined("improv-wifi-launch-button").then(() => {
+          if (customElements.get("improv-wifi-launch-button").isSupported) {
+            document.querySelector(".not-supported").outerHTML =
+              ": <improv-wifi-launch-button><button>Try it out</button></improv-wifi-launch-button>";
+          }
+        });
       }
     </script>
   </body>
