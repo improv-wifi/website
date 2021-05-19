@@ -12,6 +12,7 @@
           Roboto, Ubuntu, sans-serif;
         padding: 0;
         margin: 0;
+        line-height: 1.4;
       }
       a {
         color: #03a9f4;
@@ -98,6 +99,12 @@
           App detects the gadget on the network and offers user to onboard it
         </li>
       </ol>
+      <p class="try-out">
+        Improv provisioning also works in browsers that support WebBluetooth
+        <improv-wifi-launch-button>
+          <button>Try it out</button>
+        </improv-wifi-launch-button>
+      </p>
 
       <ul class="menu">
         <li><a href="#">Documentation</a></li>
@@ -192,7 +199,9 @@
 
       <div class="footer">
         <div class="initiative">
-          Improv is an initiative by ESPHome & Home Assistant.<br />
+          Improv is an initiative by
+          <a href="https://www.esphome.io">ESPHome</a> &
+          <a href="https://www.home-assistant.io">Home Assistant</a>.<br />
           Initial development funded by
           <a href="https://www.nabucasa.com">Nabu Casa</a>.
         </div>
@@ -202,5 +211,18 @@
         </ul>
       </div>
     </div>
+    <script
+      type="module"
+      src="https://unpkg.com/improv-wifi-sdk/dist/web/launch-button.js?module"
+    ></script>
+    <script>
+      var klass =
+        customElements && customElements.get("improv-wifi-launch-button");
+      var supported = klass && klass.isSupported;
+      if (!supported) {
+        document.querySelector("improv-wifi-launch-button").outerHTML =
+          "(your browser does not, try with Chrome or Edge).";
+      }
+    </script>
   </body>
 </html>
