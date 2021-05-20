@@ -1,0 +1,93 @@
+---
+menu:
+  - - /
+    - Home
+  - - /documentation/
+    - Documentation
+  - - /code/
+    - Code
+---
+
+{% comment %}
+<!-- prettier-ignore -->
+{% endcomment %}
+{% capture full_title -%}
+{%- if title -%}
+{{ title }} – Improv Wi-Fi
+{%- else -%}
+Improv Wi-Fi: open standard for Wi-Fi provisioning via Bluetooth Low Energy
+{%- endif -%}
+{%- endcapture %}
+{% comment %}
+<!-- prettier-unignore -->
+{% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="/style.css" rel="stylesheet" />
+    <title>{{ full_title }}</title>
+    <link rel="icon" href="/images/favicon.png" type="image/png" />
+    <meta name="description" content="{{ description }}" />
+    <meta name="viewport" content="width=device-width" />
+    <meta property="og:title" content="{{ full_title }}" />
+    <meta property="og:site_name" content="Improv Wi-Fi" />
+    <meta
+      property="og:url"
+      content="https://www.improv-wifi.com{{ page.url }}"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="{{ description }}" />
+    <meta
+      property="og:image"
+      content="https://www.improv-wifi.com/images/social.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ full_title }}" />
+    <meta name="twitter:description" content="{{ description }}" />
+    <meta
+      name="twitter:image"
+      content="https://www.improv-wifi.com/images/social.png"
+    />
+    <script
+      type="module"
+      src="https://unpkg.com/improv-wifi-sdk@0.0.2/dist/web/launch-button.js?module"
+    ></script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="header">
+        <h1>Improv</h1>
+        <ul>
+          {% for item in menu %}
+          <li>
+            <a
+              class="{% if page.url == item[0] %}active{% endif %}"
+              href="{{ item[0] }}"
+              >{{ item[1] }}</a
+            >
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      {{ content | safe }}
+
+      <div class="footer">
+        <div>
+          Improv Wi-Fi &nbsp; – &nbsp;
+          <a href="mailto:hello@improv-wifi.com">Contact</a>
+          &nbsp; – &nbsp;
+          <a href="https://www.github.com/improv-wifi">GitHub</a>
+        </div>
+        <div class="initiative">
+          Improv is an initiative by
+          <a href="https://www.esphome.io">ESPHome</a> &
+          <a href="https://www.home-assistant.io">Home Assistant</a>.<br />
+          Initial development funded by
+          <a href="https://www.nabucasa.com">Nabu Casa</a>.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
