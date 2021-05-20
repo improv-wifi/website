@@ -1,0 +1,13 @@
+# Stop on errors
+set -e
+
+cd "$(dirname "$0")/.."
+
+SDK_VER=latest
+
+DOWNLOAD_URL=`npm view improv-wifi-sdk@$SDK_VER dist.tarball`
+
+rm -rf dist/sdk-js
+mkdir -p dist/sdk-js
+
+curl $DOWNLOAD_URL | tar zx -C dist/sdk-js --strip-components 3 package/dist/web

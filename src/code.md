@@ -11,12 +11,12 @@ These examples will help you create clients that can provision devices hosting t
 
 ### SDK for JavaScript
 
-The SDK for JavaScript contains everything you need to offer Improv provisioning on your website:
+The SDK for JavaScript contains everything you need to offer Improv provisioning on your website. Simply get started by adding the following HTML snippet:
 
 ```js
 <script
   type="module"
-  src="https://unpkg.com/improv-wifi-sdk@0.0.2/dist/web/launch-button.js?module"
+  src="https://www.improv-wifi.com/sdk-js/launch-button.js"
 ></script>
 
 <improv-wifi-launch-button></improv-wifi-launch-button>
