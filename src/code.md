@@ -3,9 +3,9 @@ layout: base
 description: TODO
 ---
 
-This page contains code samples and SDKs to help you get started with Improv Wi-Fi.
+This page contains software development kits (SDK) and code samples to help you get started using Improv Wi-Fi in your projects.
 
-## Code to provision Improv devices
+## Creating client applications that provision devices
 
 These examples will help you create clients that can provision devices hosting the Improv BLE service.
 
@@ -22,32 +22,16 @@ The SDK for JavaScript contains everything you need to offer Improv provisioning
 <improv-wifi-launch-button></improv-wifi-launch-button>
 ```
 
-This results in:
-
-> <improv-wifi-launch-button></improv-wifi-launch-button>
-
-You can also replace the default button by passing your own HTML:
-
-```js
-<improv-wifi-launch-button>
-  <button><img src="/images/home-assistant.svg" width="50"></button>
-</improv-wifi-launch-button>
-```
-
-This results in:
-
-> <improv-wifi-launch-button>
->   <button><img src="/images/home-assistant.svg" width="50"></button>
-> </improv-wifi-launch-button>
-
-The source code for the JavaScript SDK is available [on GitHub](https://github.com/improv-wifi/sdk-js) and can also be installed from NPM using `npm install --save improv-wifi-sdk`.
+See [the GitHub repository](https://github.com/improv-wifi/sdk-js) for the source code and documentation how to customize the experience or use with JavaScript package managers.
 
 ### Code samples for Android & iOS
 
 TODO
 
-## Code to help being provisioned
+## Creating firmware that can be provisioned
 
-### C++ (for ESP32)
+### SDK for C++
 
 TODO
+
+This SDK can be used for using Improv Wi-Fi as part of your ESP32 projects.
