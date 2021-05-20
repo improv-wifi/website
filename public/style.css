@@ -87,3 +87,6 @@ h3 {
   font-style: italic;
   margin-top: 16px;
 }
+.hidden {
+  display: none;
+}

@@ -22,7 +22,7 @@ The SDK for JavaScript contains everything you need to offer Improv provisioning
 <improv-wifi-launch-button></improv-wifi-launch-button>
 ```
 
-See [the GitHub repository](https://github.com/improv-wifi/sdk-js) for the source code and documentation how to customize the experience or use with JavaScript package managers.
+See [the GitHub repository](https://github.com/improv-wifi/sdk-js) for the documentation, source code, examples how to customize the experience and use with JavaScript package managers.
 
 ### Code samples for Android & iOS
 

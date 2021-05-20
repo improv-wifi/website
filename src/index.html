@@ -26,11 +26,16 @@ description: Free and open standard with ready-made SDKs that offer a great user
   </li>
 </ol>
 <p>
-  Improv provisioning also works in browsers that support WebBluetooth<span
-    class="not-supported"
-    >. Your browser is not supported, try with Google Chrome or Microsoft
-    Edge<span class="not-supported-i"></span>.</span
-  >
+  Improv provisioning also works in browsers that support WebBluetooth.
+
+  <improv-wifi-launch-button>
+    <span slot="unsupported">
+      Your browser is not supported. To try it out visit this page with Google
+      Chrome or Microsoft Edge<span class="not-supported-i hidden">
+        (but not on your iOS device)</span
+      >.</span
+    >
+  </improv-wifi-launch-button>
 </p>
 
 <h3>See it in action</h3>
@@ -123,15 +128,6 @@ description: Free and open standard with ready-made SDKs that offer a great user
 
 <script>
   if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-    document.querySelector(".not-supported-i").innerHTML =
-      " (but not on your iOS device)";
-  }
-  if (customElements) {
-    customElements.whenDefined("improv-wifi-launch-button").then(() => {
-      if (customElements.get("improv-wifi-launch-button").isSupported) {
-        document.querySelector(".not-supported").outerHTML =
-          ": <improv-wifi-launch-button><button>Try it out</button></improv-wifi-launch-button>";
-      }
-    });
+    document.querySelector(".not-supported-i").classSet.removeClass("hidden");
   }
 </script>
