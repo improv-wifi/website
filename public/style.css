@@ -9,7 +9,7 @@ body {
 a {
   color: #03a9f4;
 }
-.content {
+.container {
   margin: 0 auto;
   padding: 16px 8px;
   max-width: 600px;
@@ -43,6 +43,9 @@ h3 {
 }
 .header a.active {
   border-bottom-color: #03a9f4;
+}
+.content li {
+  padding: 4px 0;
 }
 .project {
   display: flex;
