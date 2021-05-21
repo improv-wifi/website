@@ -99,3 +99,8 @@ table {
 th {
   background-color: #e3e3e3;
 }
+
+th,
+td {
+  padding: 4px;
+}
