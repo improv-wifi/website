@@ -45,12 +45,12 @@ Characteristic UUID: `00467768-6228-2272-4663-277478268001`
 
 This characteristic will hold the current status of the provisioning service and will write and notify any listening clients for instant feedback.
 
-| Value  | State                  | Purpose                                              |
-| ------ | ---------------------- | ---------------------------------------------------- |
-| `0x01` | Authorization Required | Waiting to be authorized via a physical interaction. |
-| `0x02` | Authorized             | Ready to accept credentials.                         |
-| `0x03` | Provisioning           | Credentials received, attempt to connect.            |
-| `0x04` | Provisioned            | Connection successful.                               |
+| Value  | State                  | Purpose                                          |
+| ------ | ---------------------- | ------------------------------------------------ |
+| `0x01` | Authorization Required | Awaiting authorization via physical interaction. |
+| `0x02` | Authorized             | Ready to accept credentials.                     |
+| `0x03` | Provisioning           | Credentials received, attempt to connect.        |
+| `0x04` | Provisioned            | Connection successful.                           |
 
 ### Characteristic: Error state
 
@@ -61,8 +61,8 @@ This characteristic will hold the current error of the provisioning service and 
 | Value  | State               | Purpose                                                                                 |
 | ------ | ------------------- | --------------------------------------------------------------------------------------- |
 | `0x00` | No error            | This shows there is no current error state.                                             |
-| `0x01` | Invalid RPC packet  | RPC packet was malformed/invalid. The checksum does not match.                          |
-| `0x02` | Unknown RPC command | The command sent is unknown. See table below.                                           |
+| `0x01` | Invalid RPC packet  | RPC packet was malformed/invalid.
+| `0x02` | Unknown RPC command | The command sent is unknown.
 | `0x03` | Unable to connect   | The credentials have been received and an attempt to connect to the network has failed. |
 | `0x04` | Not Authorized      | Credentials were sent via RPC but the Improv service is not authorized.                 |
 | `0xFF` | Unknown Error       |
