@@ -5,9 +5,9 @@ description: TODO
 
 The Improv Wi-Fi protocol has two actors: the Improv service running on the gadget and the Improv client.
 
-The Improv service will broadcast it's presence via Bluetooth LE and receives Wi-Fi credentials from the client.
+The Improv service will broadcast its presence via Bluetooth LE and receives Wi-Fi credentials from the client.
 
-The Improv client detects the service via Bluetooth LE and will offer the user to sent Wi-Fi credentials.
+The Improv client detects the service via Bluetooth LE and will offer the user to send Wi-Fi credentials.
 
 ## Improv Service
 
@@ -15,7 +15,7 @@ The Improv service runs on a gadget that needs to connect to the internet but ha
 
 The Improv service can optionally require physical authorization to allow pairing, like pressing a button. It is up to the gadget to decide if and what interaction to pick. A gadget that does not require authorization should start in the "authorized" state.
 
-If an Improv service has been authorized by a user interaction, the authorization should be automatically revoked afer a timeout. This timeout is up to the gadget but we suggest 1 minute.
+If an Improv service has been authorized by a user interaction, the authorization should be automatically revoked after a timeout. This timeout is up to the gadget but we suggest 1 minute.
 
 A user is able to send Wi-Fi credentials to an authorized service. The gadget will attempt to connect to the specified wireless network. If the connection is successful, the state changes to "provisioned", the gadget can optionally return a URL to the client to finish onboarding and the Improv service is stopped.
 
@@ -23,7 +23,7 @@ If the gadget is unable to connect an error is returned. If the gadget required 
 
 ![Improv State machine](/images/improv-states.svg)
 
-The client is able to sent an `identify` command to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and enabled, the gadget will identify itself, like playing a sound or flashing a light. It is up to the gadget to decide if and what interaction to pick.
+The client is able to send an `identify` command to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and enabled, the gadget will identify itself, like playing a sound or flashing a light. It is up to the gadget to decide if and what interaction to pick.
 
 ## Bluetooth LE Service
 
