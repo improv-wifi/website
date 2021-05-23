@@ -1,0 +1,4 @@
+[[headers]]
+  for = "/sdk-js/*"
+    [headers.values]
+      Access-Control-Allow-Origin = "*"
