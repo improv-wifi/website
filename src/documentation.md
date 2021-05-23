@@ -114,6 +114,8 @@ Command ID: `0x02`
 
 Does not require the Improv service to be authorized.
 
+Should only be sent if the capability characteristic indicates that identify is supported.
+
 | Byte | Description            |
 | ---- | ---------------------- |
 | 02   | command                |
