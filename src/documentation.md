@@ -1,6 +1,7 @@
 ---
 layout: base
-description: TODO
+title: Documentation
+description: All the implementation details necessary to make your own client and service implementation.
 ---
 
 The Improv Wi-Fi protocol has two actors: the Improv service running on the gadget and the Improv client.

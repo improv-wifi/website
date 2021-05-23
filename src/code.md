@@ -1,6 +1,7 @@
 ---
 layout: base
-description: TODO
+title: Code
+description: SDKs and code samples for Improv Wi-Fi clients and services.
 ---
 
 This page contains software development kits (SDK) and code samples to help you get started using Improv Wi-Fi in your projects.
