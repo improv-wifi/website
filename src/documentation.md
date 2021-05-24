@@ -62,17 +62,17 @@ This characteristic will hold the current error of the provisioning service and 
 | Value  | State               | Purpose                                                                                 |
 | ------ | ------------------- | --------------------------------------------------------------------------------------- |
 | `0x00` | No error            | This shows there is no current error state.                                             |
-| `0x01` | Invalid RPC packet  | RPC packet was malformed/invalid.
-| `0x02` | Unknown RPC command | The command sent is unknown.
+| `0x01` | Invalid RPC packet  | RPC packet was malformed/invalid.                                                       |
+| `0x02` | Unknown RPC command | The command sent is unknown.                                                            |
 | `0x03` | Unable to connect   | The credentials have been received and an attempt to connect to the network has failed. |
 | `0x04` | Not Authorized      | Credentials were sent via RPC but the Improv service is not authorized.                 |
 | `0xFF` | Unknown Error       |
 
-### Characteristic: RPC
+### Characteristic: RPC Command
 
 Characteristic UUID: `00467768-6228-2272-4663-277478268003`
 
-This characteristic is where the client can call the RPC service.
+This characteristic is where the client can write data to call the RPC service.
 
 Note: if the combined payload is over 20 bytes, it will require multiple BLE packets to transfer the data. Make sure that your code deals with this.
 
@@ -106,6 +106,25 @@ Example: SSID = MyWirelessAP, Password = mysecurepassword
 ```
 01 1E 0C {MyWirelessAP} 10 {mysecurepassword} CS
 ```
+
+This command will generate an RPC result. The first entry in the list is an URL to redirect the user to. If there is no URL, omit the entry or add an empty string.
+
+### Characteristic: RPC Result
+
+Characteristic UUID: `00467768-6228-2272-4663-277478268004`
+
+This characteristic is where the client can read results from the RPC service if it has a result. Results are returned as a list of strings. An empty list is allowed.
+
+| Byte      | Description                                           |
+| --------- | ----------------------------------------------------- |
+| 1         | Command (see below)                                   |
+| 2         | Data length                                           |
+| 3         | Length of string 1                                    |
+| 4...X     | String 1                                              |
+| X         | Length of string 2                                    |
+| X...Y     | String 2                                              |
+| ...       | etc                                                   |
+| last byte | Checksum - A simple sum checksum keeping only the LSB |
 
 #### RPC Command: Identify
 
