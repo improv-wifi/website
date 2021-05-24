@@ -109,6 +109,24 @@ Example: SSID = MyWirelessAP, Password = mysecurepassword
 
 This command will generate an RPC result. The first entry in the list is an URL to redirect the user to. If there is no URL, omit the entry or add an empty string.
 
+#### RPC Command: Identify
+
+What a device actually does when an identify command is received is up to that specific device, but the user should be able to visually or audibly identify the device.
+
+Command ID: `0x02`
+
+Does not require the Improv service to be authorized.
+
+Should only be sent if the capability characteristic indicates that identify is supported.
+
+| Byte | Description            |
+| ---- | ---------------------- |
+| 02   | command                |
+| 00   | 0 data bytes / no data |
+| CS   | checksum               |
+
+This command has no RPC result.
+
 ### Characteristic: RPC Result
 
 Characteristic UUID: `00467768-6228-2272-4663-277478268004`
@@ -126,18 +144,3 @@ This characteristic is where the client can read results from the RPC service if
 | ...       | etc                                                   |
 | last byte | Checksum - A simple sum checksum keeping only the LSB |
 
-#### RPC Command: Identify
-
-What a device actually does when an identify command is received is up to that specific device, but the user should be able to visually or audibly identify the device.
-
-Command ID: `0x02`
-
-Does not require the Improv service to be authorized.
-
-Should only be sent if the capability characteristic indicates that identify is supported.
-
-| Byte | Description            |
-| ---- | ---------------------- |
-| 02   | command                |
-| 00   | 0 data bytes / no data |
-| CS   | checksum               |
