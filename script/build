@@ -7,4 +7,4 @@ rm -rf dist
 cp -r public dist
 script/download_js_sdk
 
-NODE_ENV=production yarn eleventy
+NODE_ENV=production npm exec -- eleventy
