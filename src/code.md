@@ -29,7 +29,13 @@ The result will look like this:
 
 See [the GitHub repository](https://github.com/improv-wifi/sdk-js) for the documentation, source code, customization examples and how to use it with JavaScript package managers.
 
-### Code samples for Android & iOS
+### SDK for Android
+
+The Android SDK contains all state management, constants and other helpers required to provision devices via Improv.
+
+See [the GitHub repository](https://github.com/improv-wifi/sdk-android) for the documentation, source code and demo application.
+
+### Code samples for iOS
 
 TODO
 
