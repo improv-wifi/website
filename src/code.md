@@ -35,14 +35,10 @@ The Android SDK contains all state management, constants and other helpers requi
 
 See [the GitHub repository](https://github.com/improv-wifi/sdk-android) for the documentation, source code and demo application.
 
-### Code samples for iOS
-
-TODO
-
 ## Creating firmware that can be provisioned
 
 ### SDK for C++
 
-TODO
+The C++ SDK contains constants and utility functions to help implementing the Improv service on your device.
 
-This SDK can be used for using Improv Wi-Fi as part of your ESP32 projects.
+See [the GitHub repository](https://github.com/improv-wifi/sdk-cpp) for the documentation and source code.
