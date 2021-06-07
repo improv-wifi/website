@@ -6,7 +6,7 @@ description: SDKs and code samples for Improv Wi-Fi clients and services.
 
 This page contains software development kits (SDK) and code samples to help you get started using Improv Wi-Fi in your projects.
 
-## Creating client applications to provision devices
+## Creating client applications to configure devices
 
 These examples will help you create clients that can provision devices hosting the Improv BLE service.
 

@@ -3,7 +3,7 @@ layout: base
 description: Free and open standard with ready-made SDKs that offer a great user experience to configure Wi-Fi on devices.
 ---
 
-<h2>Open standard for Wi-Fi provisioning via Bluetooth LE</h2>
+<h2>Open standard for setting up Wi-Fi via Bluetooth LE</h2>
 
 <p>
   Improv is a free and open standard with ready-made SDKs that offer a great
@@ -83,14 +83,12 @@ description: Free and open standard with ready-made SDKs that offer a great user
 
 <h3>The problem we're solving</h3>
 
-<p>
-  Getting your Wi-Fi gadget connected to the internet is a bad user experience.
-</p>
+<p>Getting your Wi-Fi gadget connected is often a bad user experience.</p>
 
 <p>
-  A lot of devices offer APIs to be controlled or receive data via TCP/IP. The
-  majority of these devices use Wi-Fi to establish a connection with the cloud
-  or a local application.
+  A lot of devices require to be connected to the network to be controlled or
+  receive data. The majority of these devices use Wi-Fi to establish a
+  connection with a local application or the cloud.
 </p>
 
 <p>
@@ -126,6 +124,6 @@ description: Free and open standard with ready-made SDKs that offer a great user
 
 <script>
   if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-    document.querySelector(".not-supported-i").classSet.removeClass("hidden");
+    document.querySelector(".not-supported-i").classList.remove("hidden");
   }
 </script>

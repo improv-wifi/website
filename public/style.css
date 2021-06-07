@@ -22,8 +22,9 @@ h3 {
   justify-content: space-between;
   align-items: center;
 }
-.header h1 {
-  margin: 0;
+.header img {
+  height: 48px;
+  margin-left: -7px;
 }
 .header ul {
   display: flex;
@@ -46,6 +47,13 @@ h3 {
 }
 .content li {
   padding: 4px 0;
+}
+.content img {
+  max-width: 100%;
+}
+.content pre {
+  max-width: 100%;
+  overflow-y: scroll;
 }
 .project {
   display: flex;

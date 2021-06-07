@@ -15,7 +15,7 @@ menu:
 {%- if title -%}
 {{ title }} – Improv Wi-Fi
 {%- else -%}
-Improv Wi-Fi: open standard for Wi-Fi provisioning via Bluetooth Low Energy
+Improv Wi-Fi: Open standard for setting up Wi-Fi via Bluetooth LE
 {%- endif -%}
 {%- endcapture %}
 {% comment %}
@@ -27,7 +27,7 @@ Improv Wi-Fi: open standard for Wi-Fi provisioning via Bluetooth Low Energy
     <meta charset="utf-8" />
     <link href="/style.css" rel="stylesheet" />
     <title>{{ full_title }}</title>
-    <link rel="icon" href="/images/favicon.png" type="image/png" />
+    <link rel="icon" href="/images/improv-favicon.png" type="image/png" />
     <meta name="description" content="{{ description }}" />
     <meta name="viewport" content="width=device-width" />
     <meta property="og:title" content="{{ full_title }}" />
@@ -54,7 +54,7 @@ Improv Wi-Fi: open standard for Wi-Fi provisioning via Bluetooth Low Energy
   <body>
     <div class="container">
       <div class="header">
-        <h1>Improv</h1>
+        <a href="/"><img src="/images/improv-logo.svg" alt="Improv logo" /></a>
         <ul>
           {% for item in menu %}
           <li>
