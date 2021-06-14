@@ -56,6 +56,7 @@ h3 {
   overflow-y: scroll;
 }
 improv-wifi-launch-button[supported] {
+  display: block;
   margin-top: 1em;
 }
 .project {
