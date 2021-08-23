@@ -83,6 +83,16 @@ Example: SSID = MyWirelessAP, Password = mysecurepassword
 
 This command will generate an RPC result. The first entry in the list is an URL to redirect the user to. If there is no URL, omit the entry or add an empty string.
 
+#### RPC Command: Request current state
+
+Sends a request for the device to send the current state of imperial to the client.
+
+Command ID: `0x02`
+
+| Byte | Description     |
+| ---- | --------------- |
+| 01   | command (0x02)  |
+
 
 ### RPC Result (_Device to client_)
 
