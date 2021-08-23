@@ -13,10 +13,11 @@ description:
 | Byte   | Purpose                         |
 | ------ | ------------------------------- |
 | 1-8    | Header will equal `IMPERIAL`    |
-| 9      | Type (see below)                |
-| 10     | Length                          |
-| 11...X | Data                            |
-| X + 11 | Checksum (Not for RPC/Response) |
+| 9      | Version   CURRENT VERSION = `1` |
+| 10     | Type (see below)                |
+| 11     | Length                          |
+| 12...X | Data                            |
+| X + 12 | Checksum (Not for RPC/Response) |
 
 
 ### Current State (_Device to client_)
