@@ -1,12 +1,12 @@
 ---
 layout: base
-title: Documentation
+title: Imperial
 description: 
 ---
 
 ## Imperial Service
 
-... (To be written)
+Imperial is Improv via Serial and allows a client to send the Wi-Fi credentials to a device to save via a serial connection.
 
 ### Serial packet format
 
@@ -65,15 +65,15 @@ Submit Wi-Fi credentials to the Improv Service to attempt to connect to.
 
 Command ID: `0x01`
 
-| Byte | Description     |
-| ---- | --------------- |
-| 01   | command         |
-| xx   | data length     |
-| yy   | ssid length     |
-|      | ssid bytes      |
-| zz   | password length |
-|      | password bytes  |
-| CS   | checksum        |
+| Byte  | Description      |
+| ----- | ---------------- |
+| 1     | command (`0x01`) |
+| 2     | data length      |
+| 3     | ssid length      |
+| 4...X | ssid bytes       |
+| X     | password length  |
+| X...Y | password bytes   |
+| Y     | checksum         |
 
 Example: SSID = MyWirelessAP, Password = mysecurepassword
 
@@ -89,9 +89,11 @@ Sends a request for the device to send the current state of imperial to the clie
 
 Command ID: `0x02`
 
-| Byte | Description     |
-| ---- | --------------- |
-| 01   | command (0x02)  |
+| Byte | Description      |
+| ---- | ---------------- |
+| 1    | command (`0x02`) |
+
+This command will trigger two packets, the `Current State` (see above) and the same response you would get if device provisioning was successful (see below).
 
 
 ### RPC Result (_Device to client_)
@@ -102,7 +104,7 @@ This message type contains the response to a RPC command. Results are returned a
 
 | Byte      | Description                                           |
 | --------- | ----------------------------------------------------- |
-| 1         | Command (see below)                                   |
+| 1         | Command being responded to (see above)                |
 | 2         | Data length                                           |
 | 3         | Length of string 1                                    |
 | 4...X     | String 1                                              |
