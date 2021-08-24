@@ -93,7 +93,7 @@ Command ID: `0x02`
 | ---- | ---------------- |
 | 1    | command (`0x02`) |
 
-This command will trigger two packets, the `Current State` (see above) and the same response you would get if device provisioning was successful (see below).
+This command will trigger at least one packet, the `Current State` (see above) and  if already provisioned, the same response you would get if device provisioning was successful (see below).
 
 
 ### RPC Result (_Device to client_)
