@@ -1,23 +1,23 @@
 ---
 layout: base
-title: Imperial
+title: Improv via Serial
 description: 
 ---
 
-## Imperial Service
+## Improv via Serial Service
 
-Imperial is Improv via Serial and allows a client to send the Wi-Fi credentials to a device to save via a serial connection.
+Improv via Serial allows a client to send the Wi-Fi credentials to a device to save via a serial connection.
 
 ### Serial packet format
 
 | Byte   | Purpose                         |
 | ------ | ------------------------------- |
-| 1-8    | Header will equal `IMPERIAL`    |
-| 9      | Version   CURRENT VERSION = `1` |
-| 10     | Type (see below)                |
-| 11     | Length                          |
-| 12...X | Data                            |
-| X + 12 | Checksum (Not for RPC/Response) |
+| 1-6    | Header will equal `IMPROV`      |
+| 7      | Version   CURRENT VERSION = `1` |
+| 8      | Type (see below)                |
+| 9      | Length                          |
+| 10...X | Data                            |
+| X + 10 | Checksum (Not for RPC/Response) |
 
 
 ### Current State (_Device to client_)
@@ -31,6 +31,10 @@ The current status of the provisioning service and will write and notify any lis
 | `0x02` | Ready (Authorized)     | Ready to accept credentials.                     |
 | `0x03` | Provisioning           | Credentials received, attempt to connect.        |
 | `0x04` | Provisioned            | Connection successful.                           |
+| 3      | Length of string 1                                    |
+| 4...X  | String 1                                              |
+| X      | Length of string 2                                    |
+| X...Y  | String 2                                              |
 
 ### Error state (_Device to client_)
 
@@ -85,7 +89,7 @@ This command will generate an RPC result. The first entry in the list is an URL 
 
 #### RPC Command: Request current state
 
-Sends a request for the device to send the current state of imperial to the client.
+Sends a request for the device to send the current state of improv to the client.
 
 Command ID: `0x02`
 
