@@ -1,6 +1,6 @@
 ---
 layout: base
-title: Documentation
+title: Improv via BLE
 description: All the implementation details necessary to make your own client and service implementation.
 ---
 
@@ -143,4 +143,3 @@ This characteristic is where the client can read results from the RPC service if
 | X...Y     | String 2                                              |
 | ...       | etc                                                   |
 | last byte | Checksum - A simple sum checksum keeping only the LSB |
-
