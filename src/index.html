@@ -3,7 +3,7 @@ layout: base
 description: Free and open standard with ready-made SDKs that offer a great user experience to configure Wi-Fi on devices.
 ---
 
-<h2>Open standard for setting up Wi-Fi via Bluetooth LE</h2>
+<h2>Open standard for setting up Wi-Fi via Bluetooth LE and Serial</h2>
 
 <p>
   Improv is a free and open standard with ready-made SDKs that offer a great
@@ -59,12 +59,12 @@ description: Free and open standard with ready-made SDKs that offer a great user
     <h3>ESPHome</h3>
     <p>Open source firmware for ESP8266/ESP32 devices that is easy to use.</p>
     <p>
-      Allows configuring Wi-Fi credentials via Improv.
-      <a
-        href="https://www.esphome.io/components/esp32_improv.html"
-        target="_blank"
-        >Learn more</a
-      >
+      Allows configuring Wi-Fi credentials via Improv over BLE.
+      <a href="https://www.esphome.io/components/esp32_improv.html" target="_blank">Learn more</a>
+    </p>
+    <p>
+      Allows configuring Wi-Fi credentials via Improv over Serial.
+      <a href="https://www.esphome.io/components/improv_serial.html" target="_blank">Learn more</a>
     </p>
     <p>
       <a href="https://www.esphome.io" target="_blank">Website</a>
@@ -122,16 +122,16 @@ description: Free and open standard with ready-made SDKs that offer a great user
 <h3>Improv Scope & Constraints</h3>
 <p>
   The goal of the standard is to get the device connected to the Wi-Fi via
-  Bluetooth Low Energy (BLE). It is not the goal to offer a way for devices to
-  share data or control. The standard should work without requiring the device
-  to contain a screen.
+  Bluetooth Low Energy (BLE) or Serial (USB/UART). It is not the goal to offer a way
+  for devices to share data or control. The standard should work without
+  requiring the device to contain a screen.
 </p>
 
 <h3>More Reading</h3>
 
 <ul>
   <li>
-    Read <a href="/documentation/">the documentation</a> to see how it works
+    Read the <a href="/ble/">ble</a> or <a href="/serial/">serial</a> documentation</a> to see how it works
   </li>
   <li>Learn about <a href="/code/">the SDKs and code samples</a></li>
 </ul>
