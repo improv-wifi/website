@@ -1,14 +1,22 @@
 ---
 layout: base
 title: Improv via Serial
-description: 
+description:
 ---
 
-## Improv via Serial Service
+This is the description of the Improv Wi-Fi protocol using a serial port.
 
-Improv via Serial allows a client to send the Wi-Fi credentials to a device to save via a serial connection.
+The device needs to be connected to the computer via a USB/UART serial port.
 
-### Serial packet format
+The protocol has two actors: the Improv service running on the gadget and the Improv client.
+
+The Improv service will receive Wi-Fi credentials from the client via the serial connection.
+
+The Improv client asks for the current state and sends the Wi-Fi credentials.
+
+## Packet format
+
+All packets are sent in the following format:
 
 | Byte   | Purpose                         |
 | ------ | ------------------------------- |
@@ -19,28 +27,47 @@ Improv via Serial allows a client to send the Wi-Fi credentials to a device to s
 | 10...X | Data                            |
 | X + 10 | Checksum (Not for RPC/Response) |
 
+The packet types are:
 
-### Current State (_Device to client_)
+| Type | Description | Direction
+| ---- | ----------- | --------
+| `0x01 ` | Current state | Device to Client
+| `0x02 ` | Error state | Device to Client
+| `0x03 ` | RPC Command | Device to Client
+| `0x04 ` | RPC Result | Client to Device
 
-Current state type: `0x01`
+## Packet: Current State
 
-The current status of the provisioning service and will write and notify any listening clients for instant feedback.
+Type: `0x01`<br>
+Direction: Device to Client
+
+The data of this packet is a single byte and contains the current status of the provisioning service. It is to be written to any listening clients for instant feedback.
+
+| Byte | Description      |
+| ---- | ---------------- |
+| 1    | current state |
+
+The current state can be the following values:
 
 | Value  | State                  | Purpose                                          |
 | ------ | ---------------------- | ------------------------------------------------ |
 | `0x02` | Ready (Authorized)     | Ready to accept credentials.                     |
 | `0x03` | Provisioning           | Credentials received, attempt to connect.        |
 | `0x04` | Provisioned            | Connection successful.                           |
-| 3      | Length of string 1                                    |
-| 4...X  | String 1                                              |
-| X      | Length of string 2                                    |
-| X...Y  | String 2                                              |
 
-### Error state (_Device to client_)
 
-Error state type: `0x02`
+## Packet: Error state
 
-This message will be sent with the current error state if it changes for instant feedback.
+Type: `0x02`<br>
+Direction: Device to client
+
+The data of this packet is a single byte and contains the current status of the provisioning service. Whenever it changes the device needs to sent it to any listening clients for instant feedback.
+
+| Byte | Description      |
+| ---- | ---------------- |
+| 1    | error state |
+
+Error state can be the following values:
 
 | Value  | State               | Purpose                                                                                 |
 | ------ | ------------------- | --------------------------------------------------------------------------------------- |
@@ -50,11 +77,12 @@ This message will be sent with the current error state if it changes for instant
 | `0x03` | Unable to connect   | The credentials have been received and an attempt to connect to the network has failed. |
 | `0xFF` | Unknown Error       |                                                                                         |
 
-### RPC (_Client to device_)
+## Packet: RPC Command
 
-RPC type: `0x03`
+Type: `0x03`<br>
+Direction: Client to device
 
-This message type is used for the client to send commands to the device.
+This packet type is used for the client to send commands to the device. When an RPC command is sent, the device should sent an update to the client to set the error state to 0 (no error). The response will either be an RPC result packet or an error state update.
 
 | Byte  | Description                                           |
 | ----- | ----------------------------------------------------- |
@@ -63,10 +91,11 @@ This message type is used for the client to send commands to the device.
 | 3...X | Data                                                  |
 | X + 3 | Checksum - A simple sum checksum keeping only the LSB |
 
-#### RPC Command: Send Wi-Fi settings
+### RPC Command: Send Wi-Fi settings
 
 Submit Wi-Fi credentials to the Improv Service to attempt to connect to.
 
+Type: `0x03`<br>
 Command ID: `0x01`
 
 | Byte  | Description      |
@@ -87,10 +116,11 @@ Example: SSID = MyWirelessAP, Password = mysecurepassword
 
 This command will generate an RPC result. The first entry in the list is an URL to redirect the user to. If there is no URL, omit the entry or add an empty string.
 
-#### RPC Command: Request current state
+### RPC Command: Request current state
 
 Sends a request for the device to send the current state of improv to the client.
 
+Type: `0x03`<br>
 Command ID: `0x02`
 
 | Byte | Description      |
@@ -100,11 +130,12 @@ Command ID: `0x02`
 This command will trigger at least one packet, the `Current State` (see above) and  if already provisioned, the same response you would get if device provisioning was successful (see below).
 
 
-### RPC Result (_Device to client_)
+## Packet: RPC Result
 
-RCP response type: `0x04`
+Type: `0x04`<br>
+Direction: Device to client
 
-This message type contains the response to a RPC command. Results are returned as a list of strings. An empty list is allowed.
+This packet type contains the response to an RPC command. Results are returned as a list of strings. An empty list is allowed.
 
 | Byte      | Description                                           |
 | --------- | ----------------------------------------------------- |

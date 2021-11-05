@@ -3,38 +3,39 @@ layout: base
 description: Free and open standard with ready-made SDKs that offer a great user experience to configure Wi-Fi on devices.
 ---
 
-<h2>Open standard for setting up Wi-Fi via Bluetooth LE and Serial</h2>
+<h2>
+  Open standard for connecting devices to Wi-Fi using Bluetooth LE or Serial
+</h2>
 
 <p>
   Improv is a free and open standard with ready-made SDKs that offer a great
-  user experience to configure Wi-Fi on devices.
-</p>
-<p>
-  With Improv creators can offer a better onboarding experience when they share
-  their creations with others:
+  user experience to configure Wi-Fi on devices:
 </p>
 <ol>
-  <li>Connect gadget to power</li>
+  <li>Power on device</li>
   <li>
-    Client application uses Improv to send the Wi-Fi credentials to the gadget
+    Client application uses Improv to send the Wi-Fi credentials to the device
   </li>
-  <li>The gadget will connect to the wireless network and returns a URL</li>
-  <li>
-    Client application guides user to the URL to continue setting up the gadget
-  </li>
+  <li>The device connects to Wi-Fi network and returns a URL</li>
+  <li>User visits URL to continue setting up the device</li>
 </ol>
 <p>
-  Improv provisioning also works in browsers that support WebBluetooth.
-
+  Improv protocol can be used over Bluetooth Low Energy or via the serial port.
+  Both protocols can also be used from a browser.
+</p>
+<div>
   <improv-wifi-launch-button>
     <span slot="unsupported">
       Your browser is not supported. To try it out, visit this page with Google
       Chrome or Microsoft Edge<span class="not-supported-i hidden">
         (but not on your iOS device)</span
-      >.</span
-    >
+      >.
+    </span>
   </improv-wifi-launch-button>
-</p>
+  <improv-wifi-serial-launch-button>
+    <span slot="unsupported"></span>
+  </improv-wifi-serial-launch-button>
+</div>
 
 <h3>See it in action</h3>
 <div class="videoWrapper">
@@ -59,8 +60,18 @@ description: Free and open standard with ready-made SDKs that offer a great user
     <h3>ESPHome</h3>
     <p>Open source firmware for ESP8266/ESP32 devices that is easy to use.</p>
     <p>
-      Allows configuring Wi-Fi credentials via Improv over <a href="https://www.esphome.io/components/esp32_improv.html"
-        target="_blank">BLE</a> or <a href="https://www.esphome.io/components/improv_serial.html" target="_blank">Serial</a>.
+      Allows configuring Wi-Fi credentials via Improv over
+      <a
+        href="https://www.esphome.io/components/esp32_improv.html"
+        target="_blank"
+        >BLE</a
+      >
+      or
+      <a
+        href="https://www.esphome.io/components/improv_serial.html"
+        target="_blank"
+        >Serial</a
+      >.
     </p>
     <p>
       <a href="https://www.esphome.io" target="_blank">Website</a>
@@ -115,19 +126,20 @@ description: Free and open standard with ready-made SDKs that offer a great user
   that don’t provide internet access.
 </p>
 
-<h3>Improv Scope & Constraints</h3>
+<h3>Scope & Constraints</h3>
 <p>
-  The goal of the standard is to get the device connected to the Wi-Fi via
-  Bluetooth Low Energy (BLE) or Serial (USB/UART). It is not the goal to offer a way
-  for devices to share data or control. The standard should work without
-  requiring the device to contain a screen.
+  The goal of the Improv standard is to get the device connected to the Wi-Fi
+  via Bluetooth Low Energy (BLE) or Serial (USB/UART). It is not the goal to
+  offer a way for devices to share data or control. The standard should work
+  without requiring the device to contain a screen.
 </p>
 
 <h3>More Reading</h3>
 
 <ul>
   <li>
-    Read the <a href="/ble/">ble</a> or <a href="/serial/">serial</a> documentation</a> to see how it works
+    Read the <a href="/ble/">Bluetooth LE</a> or
+    <a href="/serial/">serial</a> documentation to see how it works
   </li>
   <li>Learn about <a href="/code/">the SDKs and code samples</a></li>
 </ul>

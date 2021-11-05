@@ -10,9 +10,9 @@ This page contains software development kits (SDK) and code samples to help you 
 
 These examples will help you create clients that can provision devices hosting the Improv BLE service.
 
-### SDK for JavaScript
+### Bluetooth LE SDK for JavaScript
 
-The SDK for JavaScript contains everything you need to offer Improv provisioning on your website. Simply get started by adding the following HTML snippet:
+The Bluetooth LE SDK for JavaScript contains everything you need to offer Improv provisioning using Bluetooth LE on your website. Simply get started by adding the following HTML snippet:
 
 ```js
 <script
@@ -28,6 +28,10 @@ The result will look like this:
 > <improv-wifi-launch-button></improv-wifi-launch-button>
 
 See [the GitHub repository](https://github.com/improv-wifi/sdk-js) for the documentation, source code, customization examples and how to use it with JavaScript package managers.
+
+### Serial SDK for JavaScript
+
+The Serial SDK for JavaScript contains everything you need to offer Improv provisioning using Serial on your website. See [the GitHub repository](https://github.com/improv-wifi/sdk-serial-js) for the documentation, source code, customization examples and how to use it with JavaScript package managers.
 
 ### SDK for Android
 
