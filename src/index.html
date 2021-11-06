@@ -36,7 +36,13 @@ description: Free and open standard with ready-made SDKs that offer a great user
     <span slot="unsupported"></span>
   </improv-wifi-serial-launch-button>
 </div>
-
+<p>
+  <i>
+    Need a device that runs Improv?
+    <a href="https://esphome.github.io/esp-web-tools/">Install this example</a>
+    on an ESP8266 or ESP32.
+  </i>
+</p>
 <h3>See it in action</h3>
 <div class="videoWrapper">
   <iframe
@@ -60,11 +66,11 @@ description: Free and open standard with ready-made SDKs that offer a great user
     <h3>ESPHome</h3>
     <p>Open source firmware for ESP8266/ESP32 devices that is easy to use.</p>
     <p>
-      Allows configuring Wi-Fi credentials via Improv over
+      Allows being configured via Improv over
       <a
         href="https://www.esphome.io/components/esp32_improv.html"
         target="_blank"
-        >BLE</a
+        >Bluetooth LE</a
       >
       or
       <a
@@ -78,7 +84,20 @@ description: Free and open standard with ready-made SDKs that offer a great user
     </p>
   </div>
 </div>
-<p class="center">
+<div class="project">
+  <div class="logo"></div>
+  <div class="info">
+    <h3>ESP Web Tools</h3>
+    <p>Open source tools to allow managing ESP devices in the browser.</p>
+    <p>Allows configuring devices via Improv over Serial.</p>
+    <p>
+      <a href="https://esphome.github.io/esp-web-tools/" target="_blank"
+        >Website</a
+      >
+    </p>
+  </div>
+</div>
+<p>
   ℹ️ Want to add Improv to your project?
   <a href="/code/">Check out the SDKs.</a>
 </p>
@@ -104,7 +123,7 @@ description: Free and open standard with ready-made SDKs that offer a great user
 -->
 <h3>The problem we're solving</h3>
 
-<p>Getting your Wi-Fi gadget connected is often a bad user experience.</p>
+<p><b>Configuring a device to connect to your Wi-Fi network is a pain.</b></p>
 
 <p>
   A lot of devices require to be connected to the network to be controlled or
@@ -113,10 +132,10 @@ description: Free and open standard with ready-made SDKs that offer a great user
 </p>
 
 <p>
-  Configuring a device to connect to your Wi-Fi is a pain. The most common
-  approach is Soft Enabled Access Point. The device starts its own Wi-Fi access
-  point, the user connects to it with their phone/computer and then interacts
-  directly with the device via an app or a website served from the device.
+  The most common approach is Soft Enabled Access Point. The device starts its
+  own Wi-Fi access point, the user connects to it with their phone/computer and
+  then interacts directly with the device via an app or a website served from
+  the device.
 </p>
 
 <p>
