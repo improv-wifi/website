@@ -55,9 +55,13 @@ h3 {
   max-width: 100%;
   overflow-y: scroll;
 }
-improv-wifi-launch-button[supported] {
-  display: block;
-  margin-top: 1em;
+improv-wifi-launch-button,
+improv-wifi-serial-launch-button {
+  display: inline-block;
+}
+improv-wifi-launch-button[supported],
+improv-wifi-serial-launch-button[supported] {
+  margin-right: 1em;
 }
 .project {
   display: flex;
