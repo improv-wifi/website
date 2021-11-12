@@ -25,7 +25,7 @@ All packets are sent in the following format:
 | 8      | Type (see below)                |
 | 9      | Length                          |
 | 10...X | Data                            |
-| X + 10 | Checksum (Not for RPC/Response) |
+| X + 10 | Checksum                        |
 
 The packet types are:
 
@@ -89,7 +89,6 @@ This packet type is used for the client to send commands to the device. When an 
 | 1     | Command (see below)                                   |
 | 2     | Data length                                           |
 | 3...X | Data                                                  |
-| X + 3 | Checksum - A simple sum checksum keeping only the LSB |
 
 ### RPC Command: Send Wi-Fi settings
 
@@ -106,12 +105,11 @@ Command ID: `0x01`
 | 4...X | ssid bytes       |
 | X     | password length  |
 | X...Y | password bytes   |
-| Y     | checksum         |
 
 Example: SSID = MyWirelessAP, Password = mysecurepassword
 
 ```
-01 1E 0C {MyWirelessAP} 10 {mysecurepassword} CS
+01 1E 0C {MyWirelessAP} 10 {mysecurepassword}
 ```
 
 This command will generate an RPC result. The first entry in the list is an URL to redirect the user to. If there is no URL, omit the entry or add an empty string.
@@ -163,4 +161,3 @@ This packet type contains the response to an RPC command. Results are returned a
 | X         | Length of string 2                                    |
 | X...Y     | String 2                                              |
 | ...       | etc                                                   |
-| last byte | Checksum - A simple sum checksum keeping only the LSB |
