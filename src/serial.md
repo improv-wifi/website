@@ -124,6 +124,7 @@ Command ID: `0x02`
 | Byte | Description      |
 | ---- | ---------------- |
 | 1    | command (`0x02`) |
+| 2    | data length (`0`)|
 
 This command will trigger at least one packet, the `Current State` (see above) and  if already provisioned, the same response you would get if device provisioning was successful (see below).
 
@@ -137,6 +138,7 @@ Command ID: `0x03`
 | Byte | Description      |
 | ---- | ---------------- |
 | 1    | command (`0x03`) |
+| 2    | data length (`0`)|
 
 This command will trigger one packet, the `Device Information` formatted as a RPC result. This result will contain at least 4 strings.
 
