@@ -3,11 +3,14 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-SDK_VER=latest
+BLE_SDK_VER=latest
+BLE_DOWNLOAD_URL=`npm view improv-wifi-sdk@$BLE_SDK_VER dist.tarball`
 
-DOWNLOAD_URL=`npm view improv-wifi-sdk@$SDK_VER dist.tarball`
+SERIAL_SDK_VER=latest
+SERIAL_DOWNLOAD_URL=`npm view improv-wifi-serial-sdk@$SERIAL_SDK_VER dist.tarball`
 
-rm -rf dist/sdk-js
-mkdir -p dist/sdk-js
+rm -rf dist/sdk-js dist/sdk-serial-js
+mkdir -p dist/sdk-js dist/sdk-serial-js
 
-curl $DOWNLOAD_URL | tar zx -C dist/sdk-js --strip-components 3 package/dist/web
+curl $BLE_DOWNLOAD_URL | tar zx -C dist/sdk-js --strip-components 3 package/dist/web
+curl $SERIAL_DOWNLOAD_URL | tar zx -C dist/sdk-serial-js --strip-components 3 package/dist/web
