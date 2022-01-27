@@ -146,6 +146,25 @@ Order of strings: Firmware name, firmware version, hardware chip/variant, device
 
 Example: `ESPHome`, `2021.11.0`, `ESP32-C3`, `Temperature Monitor`.
 
+### RPC Command: Request scanned Wi-Fi networks
+
+Sends a request for the device to send the Wi-Fi networks it sees.
+
+Type: `0x03`<br>
+Command ID: `0x04`
+
+| Byte | Description      |
+| ---- | ---------------- |
+| 1    | command (`0x04`) |
+| 2    | data length (`0`)|
+
+This command will trigger at least one RPC Response. Each response will contain at least 3 strings.
+
+Order of strings: Wi-Fi SSID, RSSI, Auth required.
+
+Example: `MyWirelessNetwork`, `-60`, `YES`.
+
+The final response (or the first if no networks are found) will have 0 strings in the body.
 
 ## Packet: RPC Result
 
