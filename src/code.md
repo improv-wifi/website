@@ -43,6 +43,6 @@ See [the GitHub repository](https://github.com/improv-wifi/sdk-android) for the 
 
 ### SDK for C++
 
-The C++ SDK contains constants and utility functions to parse the packets and help with implementing the Improv service on your device.
+The C++ SDK contains constants and utility functions to parse the packets and help with implementing the Improv service on your device. If you need an example of using the SDK for C++, check this example [here](https://jnthas.github.io/improv-wifi-demo/).
 
 See [the GitHub repository](https://github.com/improv-wifi/sdk-cpp) for the documentation and source code.
