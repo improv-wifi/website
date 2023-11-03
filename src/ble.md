@@ -28,9 +28,12 @@ If the gadget is unable to connect an error is returned. If the gadget required 
 
 The client is able to send an `identify` command to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and enabled, the gadget will identify itself, like playing a sound or flashing a light. It is up to the gadget to decide if and what interaction to pick.
 
-## Bluetooth LE Service
+## Revision history
 
-Service UUID: `00467768-6228-2272-4663-277478268000`
+- 1.0 - Initial release
+- 2.0 - Added Service Data `4677`
+
+## GATT Services
 
 ### Characteristic: Capabilities
 
@@ -137,7 +140,7 @@ This characteristic is where the client can read results from the RPC service if
 
 | Byte      | Description                                           |
 | --------- | ----------------------------------------------------- |
-| 1         | Command (see below)                                   |
+| 1         | Command (see below)                             |
 | 2         | Data length                                           |
 | 3         | Length of string 1                                    |
 | 4...X     | String 1                                              |
@@ -145,3 +148,24 @@ This characteristic is where the client can read results from the RPC service if
 | X...Y     | String 2                                              |
 | ...       | etc                                                   |
 | last byte | Checksum - A simple sum checksum keeping only the LSB |
+
+## Bluetooth LE Advertisement
+
+The device MUST advertise the Service UUID.
+
+Service UUID: `00467768-6228-2272-4663-277478268000`
+
+With version 2.0 of the specification, the device MUST also advertise Service Data when the the internal state changes.
+
+### Service Data format
+
+Service Data UUID: `4677` (`00004677-0000-1000-8000-00805f9b34fb`)
+
+| Byte      | Description                                           |
+| --------- | ----------------------------------------------------- |
+| 1         | Current state                                         |
+| 2         | Capabilities                                          |
+| 3         | 0 (RESERVED)                                          |
+| 4         | 0 (RESERVED)                                          |
+| 5         | 0 (RESERVED)                                          |
+| 6         | 0 (RESERVED)                                          |
