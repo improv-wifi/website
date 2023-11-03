@@ -155,7 +155,12 @@ The device MUST advertise the Service UUID.
 
 Service UUID: `00467768-6228-2272-4663-277478268000`
 
-With version 2.0 of the specification, the device MUST also advertise Service Data when the the internal state changes.
+With version 2.0 of the specification:
+
+- The Service Data and Service UUID MUST be advertised periodically and when the state changes.
+- The Service Data and Service UUID MUST be in the same advertisement.
+- The Service Data and Service UUID MUST NOT be in the scan response or require active scans.
+- If the device cannot fit all of its advertising data in 31 bytes, it should cycle between advertising data.
 
 ### Service Data format
 
