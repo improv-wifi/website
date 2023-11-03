@@ -140,7 +140,7 @@ This characteristic is where the client can read results from the RPC service if
 
 | Byte      | Description                                           |
 | --------- | ----------------------------------------------------- |
-| 1         | Command (see below)                             |
+| 1         | Command (see below)                                  |
 | 2         | Data length                                           |
 | 3         | Length of string 1                                    |
 | 4...X     | String 1                                              |
