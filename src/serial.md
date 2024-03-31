@@ -33,8 +33,8 @@ The packet types are:
 | ---- | ----------- | --------
 | `0x01 ` | Current state | Device to Client
 | `0x02 ` | Error state | Device to Client
-| `0x03 ` | RPC Command | Device to Client
-| `0x04 ` | RPC Result | Client to Device
+| `0x03 ` | RPC Command | Client to Device
+| `0x04 ` | RPC Result | Device to Client
 
 ## Packet: Current State
 
