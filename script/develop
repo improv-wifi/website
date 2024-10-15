@@ -5,7 +5,8 @@ cd "$(dirname "$0")/.."
 
 rm -rf dist
 cp -r public dist
-script/download_js_sdk
+script/download_js_ble_sdk
+script/download_js_serial_sdk
 
 # Quit all background tasks when script exits
 trap "kill 0" EXIT

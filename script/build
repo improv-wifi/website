@@ -5,6 +5,7 @@ cd "$(dirname "$0")/.."
 
 rm -rf dist
 cp -r public dist
-script/download_js_sdk
+script/download_js_ble_sdk
+script/download_js_serial_sdk
 
 NODE_ENV=production npm exec -- eleventy
