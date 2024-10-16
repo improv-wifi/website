@@ -164,4 +164,13 @@ description: Free and open standard with ready-made SDKs that offer a great user
   if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
     document.querySelector(".not-supported-i").classList.remove("hidden");
   }
+
+  const ble = document.querySelector('improv-wifi-launch-button');
+  const serial = document.querySelector('improv-wifi-serial-launch-button');
+  ble.addEventListener('click', () => {
+    serial.outerHTML = '<button disabled>Disabled until page reload</button>';
+  });
+  serial.addEventListener('click', () => {
+    ble.outerHTML = '<button disabled>Disabled until page reload</button>';
+  });
 </script>
