@@ -1,4 +1,9 @@
 [[headers]]
-  for = "/sdk-js/*"
+  for = "/sdk-ble-js/*"
+    [headers.values]
+      Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/sdk-serial-js/*"
     [headers.values]
       Access-Control-Allow-Origin = "*"
