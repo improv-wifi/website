@@ -75,6 +75,7 @@ Error state can be the following values:
 | `0x01` | Invalid RPC packet  | RPC packet was malformed/invalid.                                                       |
 | `0x02` | Unknown RPC command | The command sent is unknown.                                                            |
 | `0x03` | Unable to connect   | The credentials have been received and an attempt to connect to the network has failed. |
+| `0x05` | Bad Hostname        | The hostname provided was not valid or acceptable by the device.                        |
 | `0xFF` | Unknown Error       |                                                                                         |
 
 ## Packet: RPC Command
@@ -165,6 +166,36 @@ Order of strings: Wi-Fi SSID, RSSI, Auth required.
 Example: `MyWirelessNetwork`, `-60`, `YES`.
 
 The final response (or the first if no networks are found) will have 0 strings in the body.
+
+### RPC Command: Get/Set Hostname
+
+Sends a request for the device to either get or set its hostname.
+This operation is only available while the device is Authorized.  Sending the command with no data will return
+the current hostname in the response. Sending the command with data will set the hostname to the data and also
+return the updated hostname in the response.
+
+Hostnames must conform to [RFC 1123](https://datatracker.ietf.org/doc/html/rfc1123) and can contain only letters,
+numbers and hyphens with a length of up to 255 characters.  Error code `0x05` will be returned if the hostname provided is not acceptable.
+
+Type: `0x03`<br>
+Command ID: `0x05`
+
+Get Hostname:
+
+| Byte | Description            |
+|------|------------------------|
+| 1    | command (`0x05`)       |
+| 2    | 0 data bytes / no data |
+
+Set Hostname:
+
+| Byte  | Description        |
+|-------|--------------------|
+| 1     | command (`0x05`)   |
+| 2     | length of hostname |
+| 3...X | bytes of hostname  |
+
+This command will trigger one RPC Response which will contain the hostname of the device.
 
 ## Packet: RPC Result
 
