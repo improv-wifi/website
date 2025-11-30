@@ -26,12 +26,15 @@ If the gadget is unable to connect an error is returned. If the gadget required 
 
 ![Improv State machine](/images/improv-states.svg)
 
-The client is able to send an `identify` command to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and enabled, the gadget will identify itself, like playing a sound or flashing a light. It is up to the gadget to decide if and what interaction to pick.
+The client is able to send an `identify` to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and enabled, the gadget will identify itself, like playing a sound or flashing a light. It is up to the gadget to decide if and what interaction to pick.
+
+The client is able to send an `device info` to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and supported, the gadget will return the device information in the RPC response characteristic.
 
 ## Revision history
 
 - 1.0 - Initial release
 - 2.0 - Added Service Data `4677`
+- 2.1 - Added Device Info RPC command
 
 ## GATT Services
 
@@ -41,9 +44,12 @@ Characteristic UUID: `00467768-6228-2272-4663-277478268005`
 
 This characteristic has binary encoded byte(s) of the device’s capabilities.
 
-| Bit (LSB) | Capability                                     |
-| --------- | ---------------------------------------------- |
-| `0`       | 1 if the device supports the identify command. |
+| Bit (LSB) | Capability                                        |
+|-----------|---------------------------------------------------|
+| `0`       | 1 if the device supports the identify command.    |
+| `1`       | 1 if the device supports the device info command. |
+
+So 0x01 means the device supports identify and 0x03 means the device supports identify and device info while 0x02 means the device supports identify only.
 
 ### Characteristic: Current State
 
@@ -132,6 +138,28 @@ Should only be sent if the capability characteristic indicates that identify is 
 
 This command has no RPC result.
 
+#### RPC Command: Device Info
+
+Sends a request for the device to send information about itself.
+
+Command ID: `0x03`
+
+Does not require the Improv service to be authorized.
+
+Should only be sent if the capability characteristic indicates that device info is supported.
+
+| Byte | Description            |
+|------| ---------------------- |
+| 03   | command                |
+| 00   | 0 data bytes / no data |
+| CS   | checksum               |
+
+This command will generate an RPC result. There will be at least 4 entries in the list response.
+
+Order of strings: Firmware name, firmware version, hardware chip/variant, device name.
+
+Example: `ESPHome`, `2021.11.0`, `ESP32-C3`, `Temperature Monitor`.
+
 ### Characteristic: RPC Result
 
 Characteristic UUID: `00467768-6228-2272-4663-277478268004`
@@ -155,7 +183,7 @@ The device MUST advertise the Service UUID.
 
 Service UUID: `00467768-6228-2272-4663-277478268000`
 
-With version 2.0 of the specification:
+With version 2.1 of the specification:
 
 - The Service Data and Service UUID MUST be advertised periodically and when the state changes.
 - The Service Data and Service UUID MUST be in the same advertisement.
