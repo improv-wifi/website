@@ -51,16 +51,6 @@ This characteristic has binary encoded byte(s) of the device’s capabilities.
 | `1`       | 1 if the device supports the device info command. |
 | `2`       | 1 if the device supports the scan wifi command.   |
 
-| Hex    | Capability                                                            |
-|--------|-----------------------------------------------------------------------|
-| `0x01` | the device supports the identify command only.                        |
-| `0x02` | the device supports the device info command only.                     |
-| `0x03` | the device supports the device info and identify commands.            |
-| `0x04` | the device supports the scan wifi command only.                       |
-| `0x05` | the device supports the identify and scan wifi commands.              |
-| `0x06` | the device supports the device info and scan wifi commands.           |
-| `0x07` | the device supports the identify, device info and scan wifi commands. |
-
 ### Characteristic: Current State
 
 Characteristic UUID: `00467768-6228-2272-4663-277478268001`
@@ -178,7 +168,7 @@ Command ID: `0x04`
 
 | Byte | Description            |
 |------|------------------------|
-| 03   | command (`0x04`)       |
+| 04   | command (`0x04`)       |
 | 00   | 0 data bytes / no data |
 | CS   | checksum               |
 
