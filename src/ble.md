@@ -35,6 +35,7 @@ The client is able to send a `device info` to the Improv service if it is in the
 - 1.0 - Initial release
 - 2.0 - Added Service Data `4677`
 - 2.1 - Added Device Info RPC command
+- 2.2 - Added Scan Wifi RPC command
 
 ## GATT Services
 
@@ -48,8 +49,7 @@ This characteristic has binary encoded byte(s) of the device’s capabilities.
 |-----------|---------------------------------------------------|
 | `0`       | 1 if the device supports the identify command.    |
 | `1`       | 1 if the device supports the device info command. |
-
-So 0x01 means the device supports identify and 0x03 means the device supports identify and device info while 0x02 means the device supports identify only.
+| `2`       | 1 if the device supports the scan wifi command.   |
 
 ### Characteristic: Current State
 
@@ -149,8 +149,8 @@ Does not require the Improv service to be authorized.
 Should only be sent if the capability characteristic indicates that device info is supported.
 
 | Byte | Description            |
-|------| ---------------------- |
-| 03   | command                |
+|------|------------------------|
+| 03   | command (`0x03`)       |
 | 00   | 0 data bytes / no data |
 | CS   | checksum               |
 
@@ -159,6 +159,27 @@ This command will generate an RPC result. There will be at least 4 entries in th
 Order of strings: Firmware name, firmware version, hardware chip/variant, device name.
 
 Example: `ESPHome`, `2021.11.0`, `ESP32-C3`, `Temperature Monitor`.
+
+### RPC Command: Request scanned Wi-Fi networks
+
+Sends a request for the device to send the Wi-Fi networks it sees.
+
+Command ID: `0x04`
+
+| Byte | Description            |
+|------|------------------------|
+| 04   | command (`0x04`)       |
+| 00   | 0 data bytes / no data |
+| CS   | checksum               |
+
+This command will trigger one RPC Response which will contain a multiple of 3 strings where the first contains the SSID,
+the second the RSSI and the third the authentication type of either WEP, WPA, WPA2 or NO.
+
+Order of strings: Wi-Fi SSID 1, RSSI 1, Auth type 1, Wi-Fi SSID 2, RSSI 2, Auth type 2, ...
+
+Example: `MyWirelessNetwork`, `-60`, `WPA2`, `MyOtherWirelessNetwork`, `-52`, `WEP`,...
+
+A response with no strings means no SSID was found.
 
 ### Characteristic: RPC Result
 
