@@ -36,6 +36,7 @@ The client is able to send a `device info` to the Improv service if it is in the
 - 2.0 - Added Service Data `4677`
 - 2.1 - Added Device Info RPC command
 - 2.2 - Added Scan Wifi RPC command
+- 2.3 - Added Hostname RPC command
 
 ## GATT Services
 
@@ -50,6 +51,8 @@ This characteristic has binary encoded byte(s) of the device’s capabilities.
 | `0`       | 1 if the device supports the identify command.    |
 | `1`       | 1 if the device supports the device info command. |
 | `2`       | 1 if the device supports the scan wifi command.   |
+| `3`       | 1 if the device supports the hostname command.    |
+
 
 ### Characteristic: Current State
 
@@ -71,12 +74,13 @@ Characteristic UUID: `00467768-6228-2272-4663-277478268002`
 This characteristic will hold the current error of the provisioning service and will write and notify any listening clients for instant feedback.
 
 | Value  | State               | Purpose                                                                                 |
-| ------ | ------------------- | --------------------------------------------------------------------------------------- |
+|--------|---------------------|-----------------------------------------------------------------------------------------|
 | `0x00` | No error            | This shows there is no current error state.                                             |
 | `0x01` | Invalid RPC packet  | RPC packet was malformed/invalid.                                                       |
 | `0x02` | Unknown RPC command | The command sent is unknown.                                                            |
 | `0x03` | Unable to connect   | The credentials have been received and an attempt to connect to the network has failed. |
 | `0x04` | Not Authorized      | Credentials were sent via RPC but the Improv service is not authorized.                 |
+| `0x05` | Bad Hostname        | The hostname provided was not valid or acceptable by the device.                        |
 | `0xFF` | Unknown Error       |
 
 ### Characteristic: RPC Command
@@ -180,6 +184,38 @@ Order of strings: Wi-Fi SSID 1, RSSI 1, Auth type 1, Wi-Fi SSID 2, RSSI 2, Auth 
 Example: `MyWirelessNetwork`, `-60`, `WPA2`, `MyOtherWirelessNetwork`, `-52`, `WEP`,...
 
 A response with no strings means no SSID was found.
+
+### RPC Command: Get/Set Hostname
+
+Sends a request for the device to either get or set its hostname.
+This operation is only available while the device is Authorized.  Sending the command with no data will return
+the current hostname in the response. Sending the command with data will set the hostname to the data and also
+return the updated hostname in the response.
+
+Hostnames must conform to [RFC 1123](https://datatracker.ietf.org/doc/html/rfc1123) and can contain only letters,
+numbers and hyphens with a length of up to 255 characters.  Error code `0x05` will be returned if the hostname provided is not acceptable.
+
+Command ID: `0x05`
+
+Get Hostname:
+
+| Byte | Description            |
+|------|------------------------|
+| 05   | command (`0x05`)       |
+| 00   | 0 data bytes / no data |
+| CS   | checksum               |
+
+Set Hostname:
+
+| Byte | Description        |
+|------|--------------------|
+| 05   | command (`0x05`)   |
+| XX   | length of hostname |
+|      | bytes of hostname  |
+| CS   | checksum           |
+
+This command will trigger one RPC Response which will contain the hostname of the device.
+
 
 ### Characteristic: RPC Result
 
