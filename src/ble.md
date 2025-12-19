@@ -37,6 +37,7 @@ The client is able to send a `device info` to the Improv service if it is in the
 - 2.1 - Added Device Info RPC command
 - 2.2 - Added Scan Wifi RPC command
 - 2.3 - Added Hostname RPC command
+- 2.4 - Added Device Name RPC command
 
 ## GATT Services
 
@@ -214,7 +215,38 @@ Set Hostname:
 |      | bytes of hostname  |
 | CS   | checksum           |
 
-This command will trigger one RPC Response which will contain the hostname of the device.
+This command will trigger one RPC Response which will contain the hostname of the device. Getting or setting this
+property should reset the authorization timeout.
+
+### RPC Command: Get/Set Device Name
+
+Sends a request for the device to either get or set its name. This could mean different things depending on the device
+manufacturer.  It may alter the default "hostname" of not. If setting both this property and hostname, it is recommended
+to set hostname first then device name. It should generally accept any UTF-8 encoded string however some device 
+manufacturers may choose not to support characters outside of the ASCII range.  Getting this property should  
+(unless it contains non-ASCII characters) return the same value as the Device Info's "Device Name" (4th) property.
+
+Command ID: `0x06`
+
+Get Device Name:
+
+| Byte | Description            |
+|------|------------------------|
+| 06   | command (`0x06`)       |
+| 00   | 0 data bytes / no data |
+| CS   | checksum               |
+
+Set Device Name:
+
+| Byte | Description                    |
+|-----|--------------------------------|
+| 06  | command (`0x06`)               |
+| XX  | length of device name in bytes |
+|     | bytes of device name           |
+| CS  | checksum                       |
+
+This command will trigger one RPC Response which will contain the Device Name of the device. Getting or setting this
+property should reset the authorization timeout.
 
 
 ### Characteristic: RPC Result
