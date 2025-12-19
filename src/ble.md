@@ -30,6 +30,8 @@ The client is able to send an `identify` to the Improv service if it is in the s
 
 The client is able to send a `device info` to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and supported, the gadget will return the device information in the RPC response characteristic.
 
+All strings must be encoded as either 7-bit ASCII or UTF-8.
+
 ## Revision history
 
 - 1.0 - Initial release
@@ -222,9 +224,8 @@ property should reset the authorization timeout.
 
 Sends a request for the device to either get or set its name. This could mean different things depending on the device
 manufacturer.  It may alter the default "hostname" or not. If setting both this property and hostname, it is recommended
-to set hostname first then device name. It should generally accept any UTF-8 encoded string however some device 
-manufacturers may choose not to support characters outside the ASCII range.  Getting this property should  
-(unless it contains non-ASCII characters) return the same value as the Device Info's "Device Name" (4th) property.
+to set hostname first then device name. Getting this property should return the same value as the Device Info's 
+"Device Name" (4th) property.
 
 Command ID: `0x06`
 

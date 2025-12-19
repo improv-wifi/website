@@ -14,6 +14,8 @@ The Improv service will receive Wi-Fi credentials from the client via the serial
 
 The Improv client asks for the current state and sends the Wi-Fi credentials.
 
+All strings must be encoded as either 7-bit ASCII or UTF-8.
+
 ## Packet format
 
 All packets are sent in the following format:
@@ -202,9 +204,8 @@ property should reset the authorization timeout.
 
 Sends a request for the device to either get or set its name. This could mean different things depending on the device
 manufacturer.  It may alter the default "hostname" or not. If setting both this property and hostname, it is recommended
-to set hostname first then device name. It should generally accept any UTF-8 encoded string however some device
-manufacturers may choose not to support characters outside the ASCII range.  Getting this property should  
-(unless it contains non-ASCII characters) return the same value as the Device Info's "Device Name" (4th) property.
+to set hostname first then device name. Getting this property should return the same value as the Device Info's
+"Device Name" (4th) property.
 
 Command ID: `0x06`
 
