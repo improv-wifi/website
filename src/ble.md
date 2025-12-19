@@ -221,9 +221,9 @@ property should reset the authorization timeout.
 ### RPC Command: Get/Set Device Name
 
 Sends a request for the device to either get or set its name. This could mean different things depending on the device
-manufacturer.  It may alter the default "hostname" of not. If setting both this property and hostname, it is recommended
+manufacturer.  It may alter the default "hostname" or not. If setting both this property and hostname, it is recommended
 to set hostname first then device name. It should generally accept any UTF-8 encoded string however some device 
-manufacturers may choose not to support characters outside of the ASCII range.  Getting this property should  
+manufacturers may choose not to support characters outside the ASCII range.  Getting this property should  
 (unless it contains non-ASCII characters) return the same value as the Device Info's "Device Name" (4th) property.
 
 Command ID: `0x06`
