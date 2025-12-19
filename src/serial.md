@@ -14,7 +14,7 @@ The Improv service will receive Wi-Fi credentials from the client via the serial
 
 The Improv client asks for the current state and sends the Wi-Fi credentials.
 
-All strings must be encoded as either 7-bit ASCII or UTF-8.
+All strings are assumed to be UTF-8 encoded.
 
 ## Packet format
 

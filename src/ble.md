@@ -30,7 +30,7 @@ The client is able to send an `identify` to the Improv service if it is in the s
 
 The client is able to send a `device info` to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and supported, the gadget will return the device information in the RPC response characteristic.
 
-All strings must be encoded as either 7-bit ASCII or UTF-8.
+All strings are assumed to be UTF-8 encoded.
 
 ## Revision history
 
