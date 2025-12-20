@@ -193,7 +193,7 @@ A response with no strings means no SSID was found.
 Sends a request for the device to either get or set its hostname.
 This operation is only available while the device is Authorized.  Sending the command with no data will return
 the current hostname in the response. Sending the command with data will set the hostname to the data and also
-return the updated hostname in the response.
+return the updated hostname in the response. Setting this property requires the device to be in an 'Authorized' state.
 
 Hostnames must conform to [RFC 1123](https://datatracker.ietf.org/doc/html/rfc1123) and can contain only letters,
 numbers and hyphens with a length of up to 255 characters.  Error code `0x05` will be returned if the hostname provided is not acceptable.
@@ -217,7 +217,7 @@ Set Hostname:
 |      | bytes of hostname  |
 | CS   | checksum           |
 
-This command will trigger one RPC Response which will contain the hostname of the device. Getting or setting this
+This command will trigger one RPC Response which will contain the hostname of the device. Setting this
 property should reset the authorization timeout.
 
 ### RPC Command: Get/Set Device Name
@@ -225,7 +225,7 @@ property should reset the authorization timeout.
 Sends a request for the device to either get or set its name. This could mean different things depending on the device
 manufacturer.  It may alter the default "hostname" or not. If setting both this property and hostname, it is recommended
 to set hostname first then device name. Getting this property should return the same value as the Device Info's 
-"Device Name" (4th) property.
+"Device Name" (4th) property. Setting this property requires the device to be in an 'Authorized' state.
 
 Command ID: `0x06`
 
@@ -246,7 +246,7 @@ Set Device Name:
 |     | bytes of device name           |
 | CS  | checksum                       |
 
-This command will trigger one RPC Response which will contain the Device Name of the device. Getting or setting this
+This command will trigger one RPC Response which will contain the Device Name of the device. Setting this
 property should reset the authorization timeout.
 
 
