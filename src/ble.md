@@ -180,11 +180,12 @@ Command ID: `0x04`
 | CS   | checksum               |
 
 This command will trigger one RPC Response which will contain a multiple of 3 strings where the first contains the SSID,
-the second the RSSI and the third the authentication type of either WEP, WPA, WPA2 or NO.
+the second the RSSI and the third the authentication type of either WEP, WPA, WPA2, WPA2 EAP, WPA3, WAPI or NO. If 
+multiple authentication types are supported they should be separated by a forward slash `/`.
 
 Order of strings: Wi-Fi SSID 1, RSSI 1, Auth type 1, Wi-Fi SSID 2, RSSI 2, Auth type 2, ...
 
-Example: `MyWirelessNetwork`, `-60`, `WPA2`, `MyOtherWirelessNetwork`, `-52`, `WEP`,...
+Example: `MyWirelessNetwork`, `-60`, `WPA2`, `MyOtherWirelessNetwork`, `-52`, `WPA/WPA2`,...
 
 A response with no strings means no SSID was found.
 
