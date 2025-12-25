@@ -30,6 +30,8 @@ The client is able to send an `identify` to the Improv service if it is in the s
 
 The client is able to send a `device info` to the Improv service if it is in the states "Require Authorization" and "Authorized". When received, and supported, the gadget will return the device information in the RPC response characteristic.
 
+All strings are assumed to be UTF-8 encoded.
+
 ## Revision history
 
 - 1.0 - Initial release
@@ -37,6 +39,7 @@ The client is able to send a `device info` to the Improv service if it is in the
 - 2.1 - Added Device Info RPC command
 - 2.2 - Added Scan Wifi RPC command
 - 2.3 - Added Hostname RPC command
+- 2.4 - Added Device Name RPC command
 
 ## GATT Services
 
@@ -177,11 +180,12 @@ Command ID: `0x04`
 | CS   | checksum               |
 
 This command will trigger one RPC Response which will contain a multiple of 3 strings where the first contains the SSID,
-the second the RSSI and the third the authentication type of either WEP, WPA, WPA2 or NO.
+the second the RSSI and the third the authentication type of either WEP, WPA, WPA2, WPA2 EAP, WPA3, WAPI or NO. If 
+multiple authentication types are supported they should be separated by a forward slash `/`.
 
 Order of strings: Wi-Fi SSID 1, RSSI 1, Auth type 1, Wi-Fi SSID 2, RSSI 2, Auth type 2, ...
 
-Example: `MyWirelessNetwork`, `-60`, `WPA2`, `MyOtherWirelessNetwork`, `-52`, `WEP`,...
+Example: `MyWirelessNetwork`, `-60`, `WPA2`, `MyOtherWirelessNetwork`, `-52`, `WPA/WPA2`,...
 
 A response with no strings means no SSID was found.
 
@@ -190,7 +194,7 @@ A response with no strings means no SSID was found.
 Sends a request for the device to either get or set its hostname.
 This operation is only available while the device is Authorized.  Sending the command with no data will return
 the current hostname in the response. Sending the command with data will set the hostname to the data and also
-return the updated hostname in the response.
+return the updated hostname in the response. Setting this property requires the device to be in an 'Authorized' state.
 
 Hostnames must conform to [RFC 1123](https://datatracker.ietf.org/doc/html/rfc1123) and can contain only letters,
 numbers and hyphens with a length of up to 255 characters.  Error code `0x05` will be returned if the hostname provided is not acceptable.
@@ -214,7 +218,37 @@ Set Hostname:
 |      | bytes of hostname  |
 | CS   | checksum           |
 
-This command will trigger one RPC Response which will contain the hostname of the device.
+This command will trigger one RPC Response which will contain the hostname of the device. Setting this
+property should reset the authorization timeout.
+
+### RPC Command: Get/Set Device Name
+
+Sends a request for the device to either get or set its name. This could mean different things depending on the device
+manufacturer.  It may alter the default "hostname" or not. If setting both this property and hostname, it is recommended
+to set hostname first then device name. Getting this property should return the same value as the Device Info's 
+"Device Name" (4th) property. Setting this property requires the device to be in an 'Authorized' state.
+
+Command ID: `0x06`
+
+Get Device Name:
+
+| Byte | Description            |
+|------|------------------------|
+| 06   | command (`0x06`)       |
+| 00   | 0 data bytes / no data |
+| CS   | checksum               |
+
+Set Device Name:
+
+| Byte | Description                    |
+|-----|--------------------------------|
+| 06  | command (`0x06`)               |
+| XX  | length of device name in bytes |
+|     | bytes of device name           |
+| CS  | checksum                       |
+
+This command will trigger one RPC Response which will contain the Device Name of the device. Setting this
+property should reset the authorization timeout.
 
 
 ### Characteristic: RPC Result
