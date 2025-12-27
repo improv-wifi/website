@@ -145,9 +145,12 @@ Command ID: `0x03`
 
 This command will trigger one packet, the `Device Information` formatted as a RPC result. This result will contain at least 4 strings.
 
-Order of strings: Firmware name, firmware version, hardware chip/variant, device name.
+Order of strings: Firmware name, firmware version, hardware chip/variant, device name. Optionally, the OS name and OS
+version can be appended if applicable and different from the firmware name/version.
 
-Example: `ESPHome`, `2021.11.0`, `ESP32-C3`, `Temperature Monitor`.
+Example without OS Name: `ESPHome`, `2021.11.0`, `esp32-s3-devkitc-1/esp32-s3`, `Temperature Monitor`.
+
+Example with OS Name: `Bluetooth Proxy`, `v1.0.0`, `denky_d4/esp32`, `My Bluetooth Proxy`, `ESPHome`, `2025.12.2`.
 
 ### RPC Command: Request scanned Wi-Fi networks
 
