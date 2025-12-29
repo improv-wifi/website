@@ -228,7 +228,7 @@ property should reset the authorization timeout.
 
 Sends a request for the device to either get or set its name. This could mean different things depending on the device
 manufacturer.  It may alter the default "hostname" or not. If setting both this property and hostname, it is recommended
-to set hostname first then device name. Getting this property should return the same value as the Device Info's 
+to set the device name first then tne hostname. Getting this property should return the same value as the Device Info's 
 "Device Name" (4th) property. Setting this property requires the device to be in an 'Authorized' state.
 
 Command ID: `0x06`
