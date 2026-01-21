@@ -14,6 +14,8 @@ The Improv service will receive Wi-Fi credentials from the client via the serial
 
 The Improv client asks for the current state and sends the Wi-Fi credentials.
 
+All strings are assumed to be UTF-8 encoded.
+
 ## Packet format
 
 All packets are sent in the following format:
@@ -143,9 +145,12 @@ Command ID: `0x03`
 
 This command will trigger one packet, the `Device Information` formatted as a RPC result. This result will contain at least 4 strings.
 
-Order of strings: Firmware name, firmware version, hardware chip/variant, device name.
+Order of strings: Firmware name, firmware version, hardware chip/variant, device name. Optionally, the OS name and OS
+version can be appended if applicable and different from the firmware name/version.
 
-Example: `ESPHome`, `2021.11.0`, `ESP32-C3`, `Temperature Monitor`.
+Example without OS Name: `ESPHome`, `2021.11.0`, `esp32-s3-devkitc-1/esp32-s3`, `Temperature Monitor`.
+
+Example with OS Name: `Bluetooth Proxy`, `v1.0.0`, `denky_d4/esp32`, `My Bluetooth Proxy`, `ESPHome`, `2025.12.2`.
 
 ### RPC Command: Request scanned Wi-Fi networks
 
@@ -172,7 +177,7 @@ The final response (or the first if no networks are found) will have 0 strings i
 Sends a request for the device to either get or set its hostname.
 This operation is only available while the device is Authorized.  Sending the command with no data will return
 the current hostname in the response. Sending the command with data will set the hostname to the data and also
-return the updated hostname in the response.
+return the updated hostname in the response. Setting this property requires the device to be in an 'Authorized' state.
 
 Hostnames must conform to [RFC 1123](https://datatracker.ietf.org/doc/html/rfc1123) and can contain only letters,
 numbers and hyphens with a length of up to 255 characters.  Error code `0x05` will be returned if the hostname provided is not acceptable.
@@ -195,7 +200,35 @@ Set Hostname:
 | 2     | length of hostname |
 | 3...X | bytes of hostname  |
 
-This command will trigger one RPC Response which will contain the hostname of the device.
+This command will trigger one RPC Response which will contain the hostname of the device. Setting this
+property should reset the authorization timeout.
+
+### RPC Command: Get/Set Device Name
+
+Sends a request for the device to either get or set its name. This could mean different things depending on the device
+manufacturer.  It may alter the default "hostname" or not. If setting both this property and hostname, it is recommended
+to set the device name first then the hostname. Getting this property should return the same value as the Device Info's
+"Device Name" (4th) property. Setting this property requires the device to be in an 'Authorized' state.
+
+Command ID: `0x06`
+
+Get Device Name:
+
+| Byte | Description            |
+|------|------------------------|
+| 1    | command (`0x06`)       |
+| 2    | 0 data bytes / no data |
+
+Set Device Name:
+
+| Byte  | Description                    |
+|-------|--------------------------------|
+| 1     | command (`0x06`)               |
+| 2     | length of device name in bytes |
+| 3...X | bytes of device name           |
+
+This command will trigger one RPC Response which will contain the Device Name of the device. Setting this
+property should reset the authorization timeout.
 
 ## Packet: RPC Result
 
