@@ -27,7 +27,7 @@ All packets are sent in the following format:
 | 8      | Type (see below)                |
 | 9      | Length                          |
 | 10...X | Data                            |
-| X + 10 | Checksum                        |
+| X + 1  | Checksum                        |
 
 The packet types are:
 
@@ -53,6 +53,7 @@ The current state can be the following values:
 
 | Value  | State                  | Purpose                                          |
 | ------ | ---------------------- | ------------------------------------------------ |
+| `0x00` | Stopped                | Provisioning is unavailable, for example because Wi-Fi is turned off on the device. |
 | `0x02` | Ready (Authorized)     | Ready to accept credentials.                     |
 | `0x03` | Provisioning           | Credentials received, attempt to connect.        |
 | `0x04` | Provisioned            | Connection successful.                           |
