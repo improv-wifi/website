@@ -230,6 +230,43 @@ Set Device Name:
 This command will trigger one RPC Response which will contain the Device Name of the device. Setting this
 property should reset the authorization timeout.
 
+### RPC Command: Get Network State
+
+Sends a request for the device to report its general network connectivity and which network interfaces it
+supports. This is independent of the Wi-Fi provisioning `Current State` (above): a device that is already
+online through a non-Wi-Fi interface (for example Ethernet) can report that here without going through
+Wi-Fi provisioning.
+
+Type: `0x03`<br>
+Command ID: `0x07`
+
+| Byte | Description            |
+|------|------------------------|
+| 1    | command (`0x07`)       |
+| 2    | 0 data bytes / no data |
+
+This command will trigger one RPC Response. The first string is the network flags: a single byte encoded
+as a decimal string (see the table below). When the device is online, the reachable device URL(s) follow
+as additional strings (the same URL(s) returned after successful Wi-Fi provisioning); when the device is
+offline, no URL strings are included.
+
+Order of strings: network flags, URL 1, URL 2, ...
+
+Example (online, with both Wi-Fi and Ethernet present): `7`, `http://192.168.1.10`.
+
+The network flags byte is a bitfield:
+
+| Bit | Value  | Meaning                                                    |
+| --- | ------ | ---------------------------------------------------------- |
+| 0   | `0x01` | Online — the device currently has network connectivity    |
+| 1   | `0x02` | Supports Wi-Fi (interface present; it may be disabled)     |
+| 2   | `0x04` | Supports Ethernet                                          |
+| 3   | `0x08` | Supports Thread                                            |
+| 4   | `0x10` | Supports a cellular modem                                  |
+
+Devices that do not implement this command respond with error `0x02` (Unknown RPC command), so clients
+must treat it as optional.
+
 ## Packet: RPC Result
 
 Type: `0x04`<br>
