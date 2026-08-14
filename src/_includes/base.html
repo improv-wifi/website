@@ -54,11 +54,7 @@ Improv Wi-Fi: Open standard for setting up Wi-Fi via Bluetooth LE and Serial
     <script type="module" src="/sdk-ble-js/launch-button.js"></script>
     <script type="module" src="/sdk-serial-js/serial-launch-button.js"></script>
 
-    <script async src="https://plausible.openhomefoundation.org/js/pa-1mfDNxbEdbdL5NncgrXnA.js"></script>
-    <script>
-      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-      plausible.init()
-    </script>
+    {% include "plausible-analytics.html" %}
   </head>
   <body>
     <div class="container">
@@ -93,8 +89,19 @@ Improv Wi-Fi: Open standard for setting up Wi-Fi via Bluetooth LE and Serial
           Development funded by
           <a href="https://www.nabucasa.com">Nabu Casa</a>.
         </div>
-        <div class="initiative">
-          This website uses <a href="https://www.openhomefoundation.org/blog/making-our-web-analytics-open-source-with-plausible/" rel="noopener">privacy-first analytics</a> to help us improve the site. You can view all data in our <a href="https://plausible.openhomefoundation.org/improv-wifi.com" rel="noopener">public dashboard</a>.
+        <div class="analytics">
+          This website uses
+          <a
+            href="https://www.openhomefoundation.org/blog/making-our-web-analytics-open-source-with-plausible/"
+            rel="noopener"
+            >privacy-first analytics</a
+          >
+          to help us improve the site. You can view all data in our
+          <a
+            href="https://plausible.openhomefoundation.org/improv-wifi.com"
+            rel="noopener"
+            >public dashboard</a
+          >.
         </div>
       </div>
     </div>

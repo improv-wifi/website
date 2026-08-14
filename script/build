@@ -7,5 +7,6 @@ rm -rf dist
 cp -r public dist
 script/download_js_ble_sdk
 script/download_js_serial_sdk
+script/download_allowed_referrers
 
 NODE_ENV=production npm exec -- eleventy
