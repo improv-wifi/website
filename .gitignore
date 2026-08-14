@@ -1,5 +1,8 @@
 node_modules
 dist
+
+# Downloaded at build time by script/download_allowed_referrers
+/src/_data/allowedReferrers.json
 .rpt2_cache
 .DS_Store
 manifest.json
