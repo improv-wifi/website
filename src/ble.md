@@ -20,6 +20,8 @@ The Improv service can optionally require physical authorization to allow pairin
 
 If an Improv service has been authorized by a user interaction, the authorization should be automatically revoked after a timeout. This timeout is up to the gadget but we suggest 1 minute.
 
+As an alternative or in addition to physical authorization, a gadget can be authorized with a setup code printed on the gadget or its packaging, similar to the setup code used by Matter. The client proves knowledge of the setup code with a password-authenticated key exchange, which also establishes an encrypted session so the Wi-Fi credentials are never sent in the clear. See the section "Setup Code Authentication" below.
+
 A user is able to send Wi-Fi credentials to an authorized service. The gadget will attempt to connect to the specified wireless network. If the connection is successful, the state changes to "provisioned", the gadget can optionally return a URL to the client to finish onboarding and the Improv service is stopped.
 
 If the gadget is unable to connect an error is returned. If the gadget required authorization, the authorization reset timeout should start over.
@@ -40,6 +42,7 @@ All strings are assumed to be UTF-8 encoded.
 - 2.2 - Added Scan Wifi RPC command
 - 2.3 - Added Hostname RPC command
 - 2.4 - Added Device Name RPC command
+- 2.5 - Added Setup Code Authentication (SPAKE2+) and Encrypted RPC command
 
 ## GATT Services
 
@@ -55,6 +58,7 @@ This characteristic has binary encoded byte(s) of the device’s capabilities.
 | `1`       | 1 if the device supports the device info command. |
 | `2`       | 1 if the device supports the scan wifi command.   |
 | `3`       | 1 if the device supports the hostname command.    |
+| `4`       | 1 if the device supports setup code authentication. |
 
 
 ### Characteristic: Current State
@@ -84,6 +88,8 @@ This characteristic will hold the current error of the provisioning service and 
 | `0x03` | Unable to connect   | The credentials have been received and an attempt to connect to the network has failed. |
 | `0x04` | Not Authorized      | Credentials were sent via RPC but the Improv service is not authorized.                 |
 | `0x05` | Bad Hostname        | The hostname provided was not valid or acceptable by the device.                        |
+| `0x06` | Authentication Failed | The setup code could not be verified, a setup code command was received out of order, or an encrypted packet could not be decrypted. The secure session, if any, is terminated. |
+| `0x07` | Too Many Attempts   | The device refuses further setup code authentication attempts until it is restarted.    |
 | `0xFF` | Unknown Error       |
 
 ### Characteristic: RPC Command
@@ -254,11 +260,124 @@ This command will trigger one RPC Response which will contain the Device Name of
 property should reset the authorization timeout.
 
 
+### RPC Command: Begin Setup Code Authentication
+
+Starts a setup code authentication handshake and returns the parameters the client needs to derive the
+SPAKE2+ values from the setup code. See the section "Setup Code Authentication" below for the
+cryptographic details.
+
+Command ID: `0x08`
+
+Accepted in the states "Authorization Required" and "Authorized". Should only be sent if the capability
+characteristic indicates that setup code authentication is supported. Command ID `0x07` is not used by
+Improv via BLE; it is reserved for the Get Network State command of Improv via Serial.
+
+| Byte | Description            |
+|------|------------------------|
+| 08   | command (`0x08`)       |
+| 00   | 0 data bytes / no data |
+| CS   | checksum               |
+
+This command will trigger one RPC Response with exactly 2 binary entries.
+
+Order of entries: PBKDF2 salt (16 to 32 bytes), PBKDF2 iteration count (4 bytes, unsigned little-endian).
+
+Receiving this command aborts any handshake or secure session that is in progress.
+
+### RPC Command: Setup Code Authentication Share
+
+Sends the client's SPAKE2+ share `shareP` to the device.
+
+Command ID: `0x09`
+
+Must be sent after Begin Setup Code Authentication. Sending it at any other time results in error `0x06`.
+
+| Byte | Description                                     |
+|------|-------------------------------------------------|
+| 09   | command (`0x09`)                                |
+| 41   | data length (65)                                |
+|      | `shareP`, uncompressed P-256 point (65 bytes)   |
+| CS   | checksum                                        |
+
+This command will trigger one RPC Response with exactly 2 binary entries.
+
+Order of entries: the device's share `shareV` (65 bytes, uncompressed P-256 point), the device's
+confirmation `confirmV` (32 bytes).
+
+The device counts an authentication attempt as soon as it responds to this command. The attempt is
+cleared again when the handshake completes successfully.
+
+### RPC Command: Setup Code Authentication Confirm
+
+Sends the client's confirmation `confirmP` to the device to complete the handshake.
+
+Command ID: `0x0A`
+
+Must be sent after Setup Code Authentication Share. Sending it at any other time results in error `0x06`.
+
+| Byte | Description                 |
+|------|-----------------------------|
+| 0A   | command (`0x0A`)            |
+| 20   | data length (32)            |
+|      | `confirmP` (32 bytes)       |
+| CS   | checksum                    |
+
+If `confirmP` is valid the device establishes the secure session, changes the current state to
+"Authorized" and triggers one RPC Response with 0 entries. If `confirmP` is invalid the device sets
+error `0x06`, discards the handshake and does not change its state.
+
+### RPC Command: Encrypted RPC
+
+Carries another RPC command inside the secure session established by setup code authentication.
+
+Command ID: `0x0B`
+
+Requires a secure session. Sending it without one results in error `0x06`.
+
+| Byte | Description                                        |
+|------|----------------------------------------------------|
+| 0B   | command (`0x0B`)                                   |
+| xx   | data length                                        |
+|      | message counter (4 bytes, unsigned little-endian)  |
+|      | ciphertext                                         |
+|      | authentication tag (16 bytes)                      |
+| CS   | checksum                                           |
+
+The plaintext is an RPC command without header and checksum: the command byte, the data length byte and
+the data bytes, exactly as they would appear in bytes 1 to X of a plaintext RPC command. Any command
+except `0x08` to `0x0B` can be carried. Because the data length is a single byte, the plaintext is at
+most 235 bytes long.
+
+Example: the plaintext for Send Wi-Fi settings with SSID = MyWirelessAP and Password = mysecurepassword is
+
+```
+01 1E 0C {MyWirelessAP} 10 {mysecurepassword}
+```
+
+If the inner command generates an RPC result, the device answers with one RPC Response for command `0x0B`
+containing exactly 1 binary entry: the message counter (4 bytes, unsigned little-endian) followed by the
+ciphertext and the authentication tag (16 bytes). The plaintext is the inner RPC result without header and
+checksum: the inner command byte, the data length byte and the list of strings, exactly as they would
+appear in bytes 1 to X of a plaintext RPC result. If the inner command has no RPC result, the Encrypted
+RPC command has no RPC result either.
+
+Errors caused by the inner command are reported through the Error state characteristic as usual. If the
+device is unable to decrypt or authenticate the packet, or the message counter is not greater than the
+last counter received, the device sets error `0x06` and terminates the secure session.
+
+Authorization obtained through setup code authentication only applies to commands carried by the Encrypted
+RPC command of that secure session. A plaintext command that requires authorization is rejected with error
+`0x04` unless the device has also been authorized by other means, such as a physical interaction. Commands
+carried by the Encrypted RPC command reset the authorization timeout in the same way as their plaintext
+counterparts.
+
 ### Characteristic: RPC Result
 
 Characteristic UUID: `00467768-6228-2272-4663-277478268004`
 
 This characteristic is where the client can read results from the RPC service if it has a result. Results are returned as a list of strings. An empty list is allowed.
+
+The entries in the results of the setup code authentication commands (`0x08` to `0x0A`) and the Encrypted RPC command (`0x0B`) are binary data and not UTF-8 strings.
 
 | Byte      | Description                                           |
 | --------- | ----------------------------------------------------- |
@@ -270,6 +389,128 @@ This characteristic is where the client can read results from the RPC service if
 | X...Y     | String 2                                              |
 | ...       | etc                                                   |
 | last byte | Checksum - A simple sum checksum keeping only the LSB |
+
+## Setup Code Authentication
+
+Setup code authentication lets a client become authorized by proving that it knows a code that is printed
+on the gadget or its packaging, or shown on its display. It follows the approach used by Matter: the code
+is never sent over the air, the device only stores a verifier derived from the code, and the handshake
+results in an encrypted session. A device indicates support with bit `4` of the Capabilities
+characteristic. Devices that only support physical authorization are not affected by this section.
+
+### Setup code
+
+The setup code is a decimal number between `00000001` and `99999998`, presented to the user as 8 digits
+including leading zeros. We suggest grouping the digits as `XXXX-XXXX`. The following codes MUST NOT be
+used: `00000000`, `11111111`, `22222222`, `33333333`, `44444444`, `55555555`, `66666666`, `77777777`,
+`88888888`, `99999999`, `12345678` and `87654321`. This matches the passcode rules of Matter.
+
+The setup code MUST be unique per device and MUST be generated randomly at manufacturing time or by the
+device itself. It MUST NOT be derived from public information such as the serial number or MAC address.
+
+A device MAY also present the setup code as a QR code. The QR code contains the text `IMPROV:` followed by
+the 8 digits, for example `IMPROV:20202021`. Additional fields MAY be appended, each separated by a
+colon; clients MUST ignore fields they do not understand.
+
+### Cryptography
+
+The handshake is SPAKE2+ as specified in [RFC 9383](https://www.rfc-editor.org/rfc/rfc9383) with the
+cipher suite P-256, SHA-256, HKDF-SHA-256 and HMAC-SHA-256. The client acts as the prover, the device as
+the verifier. `idProver` and `idVerifier` are empty. `M` and `N` are the P-256 constants defined in RFC
+9383:
+
+```
+M = 02886e2f97ace46e55ba9dd7242579f2993b64e16ef3dcab95afd497333d8fa12f
+N = 03d8bbd6c639c62937b04d997f38c3770719c629d7014d49a24b4f98baa1292b49
+```
+
+Points are exchanged and used in the transcript in uncompressed SEC1 encoding (65 bytes, starting with
+`0x04`). Scalars are encoded as 32-byte big-endian integers. All other multi-byte integers in this
+section are unsigned little-endian.
+
+#### Verifier
+
+The verifier is derived from the setup code the same way as in Matter, so a device that already has a
+Matter SPAKE2+ verifier can reuse it together with its setup code:
+
+```
+w0s || w1s = PBKDF2-HMAC-SHA256(password = setup code as 4-byte little-endian integer,
+                                salt, iterations, output length = 80 bytes)
+w0 = w0s mod n
+w1 = w1s mod n
+L  = w1 * G
+```
+
+where `n` is the order of the P-256 group and `G` its generator. The device stores `salt`, `iterations`,
+`w0` and `L` (the last two together form the 97-byte verifier). The device does not need to store the setup
+code or `w1`. The salt MUST be 16 to 32 random bytes and the iteration count MUST be between 1000 and
+100000, both chosen when the verifier is generated.
+
+#### Handshake
+
+1. The client sends Begin Setup Code Authentication (`0x08`). The device responds with `salt` and
+   `iterations`.
+2. The client computes `w0` and `w1` from the setup code entered by the user, picks a random scalar `x`
+   and sends `shareP = x * G + w0 * M` with Setup Code Authentication Share (`0x09`).
+3. The device picks a random scalar `y` and computes `shareV = y * G + w0 * N`,
+   `Z = y * (shareP - w0 * M)` and `V = y * L`. It derives the keys as described below and responds with
+   `shareV` and `confirmV`.
+4. The client computes `Z = x * (shareV - w0 * N)` and `V = w1 * (shareV - w0 * N)`, derives the keys,
+   verifies `confirmV` and sends `confirmP` with Setup Code Authentication Confirm (`0x0A`). If
+   `confirmV` does not verify, the client MUST abort.
+5. The device verifies `confirmP`. On success the secure session is established and the current state
+   changes to "Authorized".
+
+Both sides MUST verify that the received share is a valid point on P-256 and not the point at infinity.
+
+#### Key derivation
+
+```
+Context    = SHA-256("Improv Wi-Fi PAKE v1" || salt || iterations)
+TT         = len(Context) || Context || len(idProver) || idProver || len(idVerifier) || idVerifier
+             || len(M) || M || len(N) || N || len(shareP) || shareP || len(shareV) || shareV
+             || len(Z) || Z || len(V) || V || len(w0) || w0
+K_main     = SHA-256(TT)
+K_confirmP || K_confirmV = HKDF-SHA-256(salt = empty, ikm = K_main, info = "ConfirmationKeys", 64 bytes)
+K_shared   = HKDF-SHA-256(salt = empty, ikm = K_main, info = "SharedKey", 32 bytes)
+confirmP   = HMAC-SHA-256(K_confirmP, shareV)
+confirmV   = HMAC-SHA-256(K_confirmV, shareP)
+```
+
+The string `"Improv Wi-Fi PAKE v1"` is UTF-8 encoded without a terminating zero, `iterations` is encoded as
+4 bytes little-endian, `len()` is an 8-byte little-endian length as in RFC 9383, `idProver` and
+`idVerifier` are empty (length 0), `M`, `N`, `shareP`, `shareV`, `Z` and `V` are uncompressed points and
+`w0` is a 32-byte scalar. `K_confirmP` and `K_confirmV` are the first and second 32 bytes of the 64-byte
+HKDF output.
+
+The session keys are taken from `K_shared`: bytes 0 to 15 are the client-to-device key and bytes 16 to 31
+are the device-to-client key.
+
+### Encrypted session
+
+Packets carried by the Encrypted RPC command are protected with AES-128-GCM using the key for the
+respective direction and a 16-byte authentication tag. There is no additional authenticated data. The
+nonce is 12 bytes: the 4-byte little-endian message counter followed by 8 zero bytes.
+
+Each direction has its own message counter. The first packet in each direction uses counter `0`, and the
+counter is incremented by one for every packet sent in that direction. A receiver MUST reject a packet
+whose counter is not greater than the counter of the last packet it accepted in that direction.
+
+The secure session ends and its keys MUST be discarded when the BLE connection is closed, when the
+authorization timeout expires, when a decryption or counter check fails, when a new handshake is started
+or when the device is provisioned. The client needs to run the handshake again to establish a new session.
+
+### Attempt limiting
+
+The setup code has limited entropy, so the device MUST limit the number of failed attempts. Every
+handshake in which the device has sent its share counts as an attempt until it completes successfully;
+this includes handshakes the client abandons, because the response to Setup Code Authentication Share is
+enough to test one guess. We suggest allowing at most 10 consecutive failed attempts. Once the limit is
+reached the device responds to Begin Setup Code Authentication with error `0x07` until it is restarted.
+A device SHOULD also abort a handshake that has not completed within 30 seconds.
+
+A failed attempt does not change the current state. If the device was authorized through a physical
+interaction, that authorization is not affected.
 
 ## Bluetooth LE Advertisement
 
