@@ -89,7 +89,7 @@ This characteristic will hold the current error of the provisioning service and 
 | `0x04` | Not Authorized      | Credentials were sent via RPC but the Improv service is not authorized.                 |
 | `0x05` | Bad Hostname        | The hostname provided was not valid or acceptable by the device.                        |
 | `0x06` | Authentication Failed | The setup code could not be verified, a setup code command was received out of order, or an encrypted packet could not be decrypted. The secure session, if any, is terminated. |
-| `0x07` | Too Many Attempts   | The device refuses further setup code authentication attempts until it is restarted.    |
+| `0x07` | Too Many Attempts   | Too many failed setup code authentication attempts. The device temporarily refuses new attempts; the client should retry later. |
 | `0xFF` | Unknown Error       |
 
 ### Characteristic: RPC Command
@@ -441,10 +441,12 @@ w1 = w1s mod n
 L  = w1 * G
 ```
 
-where `n` is the order of the P-256 group and `G` its generator. The device stores `salt`, `iterations`,
-`w0` and `L` (the last two together form the 97-byte verifier). The device does not need to store the setup
-code or `w1`. The salt MUST be 16 to 32 random bytes and the iteration count MUST be between 1000 and
-100000, both chosen when the verifier is generated.
+`w0s` is the first 40 bytes and `w1s` the second 40 bytes of the PBKDF2 output. Each is interpreted as an
+unsigned big-endian integer and reduced modulo `n`, the order of the P-256 group. `G` is the P-256
+generator. The resulting `w0` and `w1` are 32-byte big-endian scalars. The device stores `salt`,
+`iterations`, `w0` and `L`; `w0 || L` is the 97-byte verifier in the same format as a Matter SPAKE2+
+verifier. The device does not need to store the setup code or `w1`. The salt MUST be 16 to 32 random
+bytes and the iteration count MUST be between 1000 and 100000, both chosen when the verifier is generated.
 
 #### Handshake
 
@@ -489,12 +491,16 @@ are the device-to-client key.
 ### Encrypted session
 
 Packets carried by the Encrypted RPC command are protected with AES-128-GCM using the key for the
-respective direction and a 16-byte authentication tag. There is no additional authenticated data. The
-nonce is 12 bytes: the 4-byte little-endian message counter followed by 8 zero bytes.
+respective direction and a 16-byte authentication tag. The nonce is 12 bytes: the 4-byte little-endian
+message counter followed by 8 zero bytes. The additional authenticated data is 2 bytes: the Encrypted RPC
+command ID `0x0B` followed by the direction, `0x00` for client to device and `0x01` for device to client.
 
 Each direction has its own message counter. The first packet in each direction uses counter `0`, and the
-counter is incremented by one for every packet sent in that direction. A receiver MUST reject a packet
-whose counter is not greater than the counter of the last packet it accepted in that direction.
+counter is incremented by one for every packet sent in that direction. A receiver accepts the first packet
+of a session with any counter value it can decrypt (a conforming sender uses `0`) and MUST reject every
+following packet whose counter is not greater than the counter of the last accepted packet in that
+direction. Counters MUST NOT wrap: a sender that has used counter `0xFFFFFFFF` MUST terminate the session
+instead of sending another packet.
 
 The secure session ends and its keys MUST be discarded when the BLE connection is closed, when the
 authorization timeout expires, when a decryption or counter check fails, when a new handshake is started
@@ -502,15 +508,100 @@ or when the device is provisioned. The client needs to run the handshake again t
 
 ### Attempt limiting
 
-The setup code has limited entropy, so the device MUST limit the number of failed attempts. Every
+The setup code has limited entropy, so the device MUST slow down repeated failed attempts. Every
 handshake in which the device has sent its share counts as an attempt until it completes successfully;
 this includes handshakes the client abandons, because the response to Setup Code Authentication Share is
-enough to test one guess. We suggest allowing at most 10 consecutive failed attempts. Once the limit is
-reached the device responds to Begin Setup Code Authentication with error `0x07` until it is restarted.
-A device SHOULD also abort a handshake that has not completed within 30 seconds.
+enough to test one guess. A device SHOULD abort a handshake that has not completed within 30 seconds.
+
+The device MUST NOT lock out setup code authentication permanently, because anyone in range can produce
+failed attempts without knowing the code and would thereby lock out the legitimate user. Instead the
+device enforces a cooldown that grows with the number of consecutive failed attempts and is cleared by a
+successful handshake. While a cooldown is active, Begin Setup Code Authentication is rejected with error
+`0x07`. We suggest no cooldown for the first three failed attempts, then a cooldown that starts at 5
+seconds and doubles with every further failure up to a maximum of 60 seconds. At the maximum rate an
+exhaustive search of the code space takes well over a century, while a user who mistyped the code waits
+at most a minute. The device MAY additionally close the BLE connection after a failed attempt.
 
 A failed attempt does not change the current state. If the device was authorized through a physical
 interaction, that authorization is not affected.
+
+### Test vector
+
+The following vector uses the setup code, salt and iteration count of the Matter test verifier, so the
+verifier can be cross-checked against a Matter implementation. `x` and `y` are fixed here and MUST be
+random in a real handshake. All values are hexadecimal unless noted.
+
+```
+setup code    20202021
+salt          5350414b453250204b65792053616c74            (ASCII "SPAKE2P Key Salt")
+iterations    1000                                        (on the wire: e8 03 00 00)
+PBKDF2 output aba60c30416b8f4177f5e16ad514cfd9577513f02fd60506b1049d0f2c7310010e5e40bf
+              d86b4ef681a88b71e9e2a853985a7def916ea30e01b8722fbf7d0e38856c12cd64c225bb
+              24ef21417e0e44e5
+w0            b96170aae803346884724fe9a3b287c30330c2a660375d17bb205a8cf1aecb35
+w1            823d264225e36f4923b43ad64f8c862a30f4a129bbf9ee8074a32d6d67586a90
+L             0457f8ab79ee253ab6a8e46bb09e543ae422736de501e3db37d441fe344920d09548e4c1
+              8240630c4ff4913c53513839b7c07fcc0627a1b8573a149fcd1fa466cf
+verifier      uWFwqugDNGiEck/po7KHwwMwwqZgN10XuyBajPGuyzUEV/iree4lOrao5GuwnlQ65CJzbeUB
+(w0 || L,     49s31EH+NEkg0JVI5MGCQGMMT/SRPFNRODm3wH/MBiehuFc6FJ/NH6Rmzw==
+ base64)
+x             1111111111111111111111111111111111111111111111111111111111111111
+y             2222222222222222222222222222222222222222222222222222222222222222
+shareP        044d0a606fb22bdb5f40f23a95bcd9b29346df87e0c4e18861366436d25d1c4e94963e02
+              1b443db17551776ad40f187ffcf89628f0bd52aafed2b271bad5d36398
+shareV        040beae881fcc4f61d79db4e17948af82e83c5e72b829081e18783ad61877a53b082de3b
+              1eee9bfd121aa865f38d9eeb590cd54762131b3361a53cc2e7da2e9bf4
+Z             04ccfc261f58193c98ca4ad4a53bbac6f0ee29bc4d48438090446908622ca79af621d4c0
+              88f30a3527103b969ed229ee6372b316e85a4b348ec7c1f043c8ff7095
+V             047001b126826eb09055e8c433ff178c7af3aee27e04369fac8a7e47b9a94c8e8584bebd
+              b19a94d3c5b69c181ad2e7c5ccd78e920c156fffcad9294268f14ea9e2
+Context       705ff60b4c7df75fdf54705e37ad04051fd56106ecf579e9b451e51dcabc2447
+TT            2000000000000000 705ff60b4c7df75fdf54705e37ad04051fd56106ecf579e9b451e51dcabc2447
+              0000000000000000 0000000000000000
+              4100000000000000 04886e2f...2e2d20 (M, uncompressed)
+              4100000000000000 04d8bbd6...6edbe7 (N, uncompressed)
+              4100000000000000 shareP
+              4100000000000000 shareV
+              4100000000000000 Z
+              4100000000000000 V
+              2000000000000000 w0
+K_main        afe2effe1e225c6e6d351fc985be2567035d08b156004db4e11b54f29da7b246
+K_confirmP    d4b35e3eb70f0835263bda62a3e8da95dacfec4975dfcc44d05f6351545e8600
+K_confirmV    a87e20a5de8e8b2448b530bb33841f2f092512f3adf2cb1eb7bee0cb3c269761
+K_shared      2c1792a85a9d6559a331c8335c01fa778506cd519fcb162d26dae3c2a0b97164
+confirmP      f54ad1b72b094316e3c749548fe7de4f0c226e326727c5dc7f70ec061fd9565b
+confirmV      419fef16b131f42390a5cc5963f55542636d4636dc4b5651e39b7d010325253e
+key c2d       2c1792a85a9d6559a331c8335c01fa77
+key d2c       8506cd519fcb162d26dae3c2a0b97164
+```
+
+Complete RPC packets for this handshake, including data length and checksum bytes:
+
+```
+0x08 command   08 00 08
+0x08 result    08 16 10 5350414b453250204b65792053616c74 04 e8030000 10
+0x09 command   09 41 <shareP> 6c
+0x09 result    09 63 41 <shareV> 20 <confirmV> f8
+0x0A command   0a 20 <confirmP> ef
+0x0A result    0a 00 0a
+```
+
+Encrypted RPC carrying Send Wi-Fi settings (SSID `MyWirelessAP`, password `mysecurepassword`) as the
+first client packet, and the result with the URL `http://192.168.1.10` as the first device packet:
+
+```
+plaintext cmd  011e0c4d79576972656c6573734150106d7973656375726570617373776f7264
+nonce          00000000 0000000000000000
+AAD            0b00
+0x0B command   0b 34 00000000 3e74e15b97c8434bdb335e660f01f5da0caea34630586fdb20e245e9457703365d
+                        6dcbfc01c1b2fc285712a58ee227cf 02
+
+plaintext res  011413687474703a2f2f3139322e3136382e312e3130
+nonce          00000000 0000000000000000
+AAD            0b01
+0x0B result    0b 2b 2a 00000000 f4348f8cc0f9bce72cfe63b874e74529f099a9b5bdc64d9c2900c4cf23119100
+                           c2e2a144314e e9
+```
 
 ## Bluetooth LE Advertisement
 
