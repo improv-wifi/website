@@ -1,6 +1,6 @@
 {
   "name": "Improv WiFi website",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:24",
   "postCreateCommand": "npm ci",
   "forwardPorts": [5005],
   "portsAttributes": {
