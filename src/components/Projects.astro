@@ -1,0 +1,18 @@
+---
+// The projects listed here come from src/data/projects.json. To add one, put
+// its logo in public/images/ and add an entry with a name, url and logo path.
+import projects from "../data/projects.json";
+---
+
+<div class="projects">
+  {
+    projects.map((project) => (
+      <a href={project.url} target="_blank" class="project">
+        <div class="logo">
+          <img src={project.logo} alt={`${project.name} logo`} />
+        </div>
+        <div class="name">{project.name}</div>
+      </a>
+    ))
+  }
+</div>

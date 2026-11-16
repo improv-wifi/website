@@ -1,0 +1,37 @@
+[
+  {
+    "name": "WLED",
+    "url": "https://kno.wled.ge",
+    "logo": "/images/wled.png"
+  },
+  {
+    "name": "Tasmota",
+    "url": "https://arendst.github.io/Tasmota-firmware/",
+    "logo": "/images/tasmota.svg"
+  },
+  {
+    "name": "ESPHome",
+    "url": "https://www.esphome.io",
+    "logo": "/images/esphome.svg"
+  },
+  {
+    "name": "Home Assistant",
+    "url": "https://www.home-assistant.io",
+    "logo": "/images/home-assistant.svg"
+  },
+  {
+    "name": "ESP Web Tools",
+    "url": "https://esphome.github.io/esp-web-tools/",
+    "logo": "/images/esp-web-tools.svg"
+  },
+  {
+    "name": "Clockwise",
+    "url": "https://clockwise.page",
+    "logo": "/images/clockwise.png"
+  },
+  {
+    "name": "Luciferin",
+    "url": "https://sblantipodi.github.io/glow_worm_luciferin/",
+    "logo": "/images/luciferin_logo.png"
+  }
+]

@@ -1,5 +1,5 @@
 ---
-layout: base
+layout: ../layouts/Base.astro
 title: Code
 description: SDKs and code samples for Improv Wi-Fi clients and services.
 ---
@@ -14,7 +14,7 @@ These examples will help you create clients that can provision devices via Impro
 
 The Bluetooth LE SDK for JavaScript contains everything you need to offer Improv provisioning using Bluetooth LE on your website. Simply get started by adding the following HTML snippet:
 
-```js
+```html
 <script
   type="module"
   src="https://unpkg.com/@improv-wifi/ble-sdk@2/dist/web/launch-button.js"
@@ -27,11 +27,26 @@ The result will look like this:
 
 > <improv-wifi-launch-button></improv-wifi-launch-button>
 
-See [the GitHub repository](https://github.com/improv-wifi/sdk-js) for the documentation, source code, customization examples and how to use it with JavaScript package managers.
+See [the GitHub repository](https://github.com/improv-wifi/sdk-ble-js) for the documentation, source code, customization examples and how to use it with JavaScript package managers.
 
 ### Serial SDK for JavaScript
 
-The Serial SDK for JavaScript contains everything you need to offer Improv provisioning using Serial on your website. See [the GitHub repository](https://github.com/improv-wifi/sdk-serial-js) for the documentation, source code, customization examples and how to use it with JavaScript package managers.
+The Serial SDK for JavaScript contains everything you need to offer Improv provisioning using Serial on your website. Simply get started by adding the following HTML snippet:
+
+```html
+<script
+  type="module"
+  src="https://unpkg.com/@improv-wifi/serial-sdk@3/dist/web/serial-launch-button.js"
+></script>
+
+<improv-wifi-serial-launch-button></improv-wifi-serial-launch-button>
+```
+
+The result will look like this:
+
+> <improv-wifi-serial-launch-button></improv-wifi-serial-launch-button>
+
+See [the GitHub repository](https://github.com/improv-wifi/sdk-serial-js) for the documentation, source code, customization examples and how to use it with JavaScript package managers.
 
 ### Bluetooth LE SDK for Android
 

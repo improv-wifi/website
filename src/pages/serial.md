@@ -1,5 +1,5 @@
 ---
-layout: base
+layout: ../layouts/Base.astro
 title: Improv via Serial
 description:
 ---

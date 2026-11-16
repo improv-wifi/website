@@ -1,10 +1,8 @@
 ---
-layout: base
-title: Page not found
-description: The page you are looking for could not be found.
-permalink: /404.html
+import Base from "../layouts/Base.astro";
 ---
 
+<Base title="Page not found" description="The page you are looking for could not be found.">
 <h2>Page not found</h2>
 
 <p>
@@ -16,8 +14,9 @@ permalink: /404.html
   <a href="/ble/">Bluetooth LE</a> or <a href="/serial/">Serial</a>.
 </p>
 
-<script>
+<script is:inline>
   document.addEventListener("DOMContentLoaded", function () {
     if (typeof window.plausible === "function") window.plausible("404");
   });
 </script>
+</Base>

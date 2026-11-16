@@ -1,8 +1,17 @@
 {
   "name": "Improv WiFi website",
-  "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:14",
-  "postCreateCommand": "npm install",
-  "context": "..",
-  "appPort": 5000,
-  "extensions": ["esbenp.prettier-vscode"]
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "postCreateCommand": "npm ci",
+  "forwardPorts": [5005],
+  "portsAttributes": {
+    "5005": {
+      "label": "Astro dev server",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["astro-build.astro-vscode", "esbenp.prettier-vscode"]
+    }
+  }
 }
