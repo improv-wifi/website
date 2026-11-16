@@ -1,0 +1,121 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  // Markdown pages receive their frontmatter here.
+  frontmatter?: { title?: string; description?: string };
+}
+
+const menu = [
+  ["/", "Home"],
+  ["/ble/", "BLE"],
+  ["/serial/", "Serial"],
+  ["/code/", "Code"],
+];
+
+const props = Astro.props;
+const title = props.title ?? props.frontmatter?.title;
+const description = props.description ?? props.frontmatter?.description;
+const fullTitle = title
+  ? `${title} – Improv Wi-Fi`
+  : "Improv Wi-Fi: Open standard for setting up Wi-Fi via Bluetooth LE and Serial";
+const url = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="/style.css" rel="stylesheet" />
+    <title>{fullTitle}</title>
+    <link rel="icon" href="/images/improv-favicon.png" type="image/png" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:site_name" content="Improv Wi-Fi" />
+    <meta property="og:url" content={url.href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content={description} />
+    <meta
+      property="og:image"
+      content="https://www.improv-wifi.com/images/social.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta
+      name="twitter:image"
+      content="https://www.improv-wifi.com/images/social.png"
+    />
+    <script
+      is:inline
+      type="module"
+      src="https://unpkg.com/@improv-wifi/ble-sdk@2/dist/web/launch-button.js"
+    ></script>
+    <script
+      is:inline
+      type="module"
+      src="https://unpkg.com/@improv-wifi/serial-sdk@3/dist/web/serial-launch-button.js"
+    ></script>
+
+    {
+      // OHF's shared loader adds the referrer filter. Skipped in `astro dev`.
+      import.meta.env.PROD && (
+        <script
+          is:inline
+          async
+          src="https://www.openhomefoundation.org/plausible.js?site=improv-wifi.com"
+        />
+      )
+    }
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <a href="/"><img src="/images/improv-logo.svg" alt="Improv logo" /></a>
+        <ul>
+          {
+            menu.map(([href, label]) => (
+              <li>
+                <a class={Astro.url.pathname === href ? "active" : ""} href={href}>
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="content"><slot /></div>
+
+      <div class="footer">
+        <div>
+          Improv Wi-Fi &nbsp; – &nbsp;
+          <a href="mailto:hello@improv-wifi.com">Contact</a>
+          &nbsp; – &nbsp;
+          <a href="https://www.github.com/improv-wifi">GitHub</a>
+        </div>
+        <div class="initiative">
+          <a href="https://www.openhomefoundation.org">
+            <img
+              src="https://www.openhomefoundation.org/badges/ohf-open-standard.png"
+              alt="An open standard from the Open Home Foundation"
+            />
+          </a>
+        </div>
+        <div class="analytics">
+          This website uses&nbsp;
+          <a
+            href="https://www.openhomefoundation.org/blog/making-our-web-analytics-open-source-with-plausible/"
+            rel="noopener">privacy-first analytics</a
+          >
+          &nbsp;to help us improve the site. You can view all data in our&nbsp;
+          <a
+            href="https://plausible.openhomefoundation.org/improv-wifi.com"
+            rel="noopener">public dashboard</a
+          >.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

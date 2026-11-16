@@ -1,3 +1,7 @@
 # These redirects are handled by Netlify
 
 /documentation /ble
+
+# The SDKs used to be hosted here. Send old links to the npm CDN.
+/sdk-ble-js/*    https://unpkg.com/@improv-wifi/ble-sdk/dist/web/:splat     301
+/sdk-serial-js/* https://unpkg.com/@improv-wifi/serial-sdk/dist/web/:splat  301

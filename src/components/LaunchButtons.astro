@@ -1,0 +1,39 @@
+---
+// The BLE and Serial launch buttons. Starting one disables the other, because
+// only one provisioning method can be in use at a time.
+---
+
+<h3>Improv via BLE</h3>
+<improv-wifi-launch-button>
+  <span slot="unsupported">
+    Your browser is not supported. To try it out, visit this page with Google
+    Chrome or Microsoft Edge<span class="not-supported-i hidden">
+      (but not on your iOS device)</span
+    >.
+  </span>
+</improv-wifi-launch-button>
+
+<h3>Improv via Serial</h3>
+<improv-wifi-serial-launch-button>
+  <span slot="unsupported">
+    Your browser is not supported. To try it out, visit this page with Google
+    Chrome, Microsoft Edge or Mozilla Firefox<span class="not-supported-i hidden">
+      (but not on your iOS device)</span
+    >.
+  </span>
+</improv-wifi-serial-launch-button>
+
+<script is:inline>
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    document.querySelector(".not-supported-i").classList.remove("hidden");
+  }
+
+  const ble = document.querySelector("improv-wifi-launch-button");
+  const serial = document.querySelector("improv-wifi-serial-launch-button");
+  ble.addEventListener("click", () => {
+    serial.outerHTML = "<button disabled>Disabled until page reload</button>";
+  });
+  serial.addEventListener("click", () => {
+    ble.outerHTML = "<button disabled>Disabled until page reload</button>";
+  });
+</script>

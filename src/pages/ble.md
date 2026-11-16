@@ -1,5 +1,5 @@
 ---
-layout: base
+layout: ../layouts/Base.astro
 title: Improv via BLE
 description: All the implementation details necessary to make your own client and service implementation.
 ---
