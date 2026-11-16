@@ -17,7 +17,7 @@ The Bluetooth LE SDK for JavaScript contains everything you need to offer Improv
 ```js
 <script
   type="module"
-  src="https://www.improv-wifi.com/sdk-js/launch-button.js"
+  src="https://unpkg.com/@improv-wifi/ble-sdk@2/dist/web/launch-button.js"
 ></script>
 
 <improv-wifi-launch-button></improv-wifi-launch-button>
